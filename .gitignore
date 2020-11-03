@@ -3,6 +3,8 @@ Thumbs.db
 ehthumbs.db
 ehthumbs_vista.db
 
+__pycache__
+
 # Folder config file
 Desktop.ini
 
