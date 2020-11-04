@@ -4,6 +4,8 @@ ehthumbs.db
 ehthumbs_vista.db
 
 __pycache__
+dist
+build
 
 # Folder config file
 Desktop.ini

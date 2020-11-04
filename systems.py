@@ -1,3 +1,6 @@
+
+MERITS_PER_KILL = 30
+
 OWNERSHIP_CODES = {
 "ZH": 'Zachary Hudson',
 "EM": 'Edmund Mahon',
@@ -12,32 +15,41 @@ OWNERSHIP_CODES = {
 'ZT': 'Zemina Torval'
 }
 
-class Galaxy():
-    def __init__(self):
-        self.systems = []
-        
-    def add_system(system):
-        # add systems in alphabetical order
-        if len(self.systems) == 0:
-            self.systems.append(system)
-        else:
-            for i in range(len(self.systems)):
-                if self.systems[i].name < system.name:
-                    self.systems.insert(i,system)
-                    break
-                
-    def system_search(search):
-        None
-        # TODO: search systems
-        
+PROGRESS_BAR_COLORS = [
+    "#4CAF0B",
+    "#4AB1D3",
+    "#F48D1C"
+]
+
+systems = []
+
+def find_system_by_number(number):
+    if number >= len(systems) or number < 0:
+        return None
+    return systems[number]
+
+def add_system(system):
+    # add systems in alphabetical order
+    if len(systems) == 0:
+        systems.append(system)
+    else:
+        for i in range(len(systems)):
+            if systems[i].name > system.name:
+                systems.insert(i,system)
+                return
+        systems.append(system)
+            
+def get_system_names():
+    return [system.name for system in systems]
         
 class Sys():
-    def __init__(self,owner,name,trigger_um, owner,owner = None):
+    def __init__(self,name,systemTrigger, owner = None):
         self.name = name
-        self.trigger_um = trigger_um
+        self.systemTrigger = systemTrigger
         self.owner = owner
+        add_system(self)
 
-    def set_owner(owner):
+    def set_owner(self,owner):
         self.owner = owner
 
 
