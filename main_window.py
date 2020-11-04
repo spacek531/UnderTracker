@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt
 
 from pynput import keyboard
 import systems
+import math
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -87,7 +88,8 @@ class Session(QtWidgets.QVBoxLayout):
                                             self.meritsDunked,
                                             self.squadron.totalMerits,
                                             self.killTracker.killMerits*self.squadron.squadSize,
-                                            self.meritsNeeded
+                                            self.meritsNeeded,
+                                            self.squadron.squadSize
         )
         self.squadron.changeKillTrackerMerits(self.killTracker.killMerits)
         
@@ -210,7 +212,10 @@ class NumberField(QtWidgets.QVBoxLayout):
         self.addWidget(self.editor)
 
     def textChanged(self,input_text):
-        self.value = int(str(input_text))
+        try:
+            self.value = int(str(input_text))
+        except:
+            self.value = 0
     def editingFinished(self):
         if self.callback:
             self.callback(self.value)
@@ -353,11 +358,11 @@ class ProgressBar(QtWidgets.QVBoxLayout):
         self.progressText = QtWidgets.QLabel()
         
         self.addWidget(self.progressText)
-        self.updateProgressBars(0,0,0,0,0)
+        self.updateProgressBars(0,0,0,0,0,0)
         
-    def updateProgressBars(self,trigger,dunked,squadron,tracker,remaining):
+    def updateProgressBars(self,trigger,dunked,squadron,tracker,remaining,mates):
         if trigger > 0:
-            self.progressText.setText(str(int((dunked+squadron)/trigger*100))+"% Complete: "+str(dunked+squadron)+"/"+str(trigger)+"       "+str(max(0,remaining))+" remain w/ kill tracker")
+            self.progressText.setText(str(int((dunked+squadron)/trigger*100))+"% Complete: "+str(dunked+squadron)+"/"+str(trigger)+"   "+str(max(0,remaining))+" remain w/ kill tracker   "+str(math.ceil((trigger-dunked-squadron)/max(1,mates)))+" per CMDR")
             barWidth = self.barHolder.width()-20
             dunkedBarWidth = min(int(barWidth*dunked/trigger),barWidth)
             squadronBarWidth = min(int(barWidth*squadron/trigger),barWidth-dunkedBarWidth)
