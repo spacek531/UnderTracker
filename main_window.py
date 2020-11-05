@@ -10,8 +10,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setStyleSheet(TOP_LEVEL_CSS)
         
         self.VLayout = QtWidgets.QVBoxLayout()
-        
         self.setLayout(self.VLayout)
+        
+        self.createHeader()
+        
+        imageLabel = QtWidgets.QLabel()
+        imageLabel.setText("Hello WOrld")
+        imageLabel.setObjectName("HeaderImage")
+        imageLabel.setMinimumSize(400,400)
+        
+        self.VLayout.addWidget(imageLabel)
         
     def addWidget(self,widget):
         self.VLayout.addWidget(widget)
@@ -19,8 +27,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def addLayout(self,layout):
         self.VLayout.addLayout(layout)
         
-        
-        
+    def createHeader(self):
+        None
         
 PROGRESS_BAR_COLORS = [
     "#4CAF0B",
@@ -30,7 +38,7 @@ PROGRESS_BAR_COLORS = [
         
 TOP_LEVEL_CSS ="""
 QMainWindow {Background-Color:#03080A; }
-QLabel {Color: #1F5368; }
+QLabel {Color: #1F5368; Background-Color:#FFFFFA; }
 QGroupBox {Color: #1F5368; }
 QGroupBox#submittedGroupBox {Color: #347708; }
 """
