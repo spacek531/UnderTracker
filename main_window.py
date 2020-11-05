@@ -9,8 +9,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("[BRGD] Undermining Tool")
         self.setStyleSheet(TOP_LEVEL_CSS)
         
+        self.windowWidget = QtWidgets.QWidget()
         self.VLayout = QtWidgets.QVBoxLayout()
-        self.setLayout(self.VLayout)
+        self.windowWidget.setLayout(self.VLayout)
         
         self.createHeader()
         
