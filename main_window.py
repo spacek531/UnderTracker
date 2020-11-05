@@ -6,8 +6,10 @@ import resources
 QtGui.QFontDatabase.addApplicationFont(":/audiowide-regular.ttf")
 QtGui.QFontDatabase.addApplicationFont(":/resources/SourceSansPro-SemiBold.ttf")
 
-TitleFont = QtGui.QFont("Audiowide",14,100)
-BodyFont = QtGui.QFont("SourceSansPro",18,100)
+TitleFont = QtGui.QFont("Audiowide",12,100)
+SubtitleFont = QtGui.QFont("Audiowide",11,100)
+BodyFont = QtGui.QFont("SourceSansPro",14,100)
+SubBodyFont = QtGui.QFont("SourceSansPro",12,100)
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -38,7 +40,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def createHeader(self):
         ImageLabel = QtWidgets.QLabel()
         ImageLabel.setObjectName("HeaderImage")
-        ImageLabel.setMinimumSize(512,64)
+        ImageLabel.setMinimumSize(0,0)
         
         self.addWidget(ImageLabel)
         
@@ -56,7 +58,7 @@ class MainWindow(QtWidgets.QMainWindow):
         Row1.addSpacing(15)
         
         self.powerLogo = QtWidgets.QLabel()
-        self.powerLogo.setMinimumSize(128,128)
+        self.powerLogo.setMinimumSize(100,100)
         
         Row1.addWidget(self.powerLogo)
         
@@ -65,7 +67,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
         Row2.addLayout(self.createInputBoxFrame(self.triggerInput,"Merit Trigger"))
         Row2.addSpacing(15)
-        Row2.addLayout(self.createInputBoxFrame(self.redeemedInput,"Merits Redeemed"))
+        Row2.addLayout(self.createInputBoxFrame(self.redeemedInput,"Merits Redeemed","GreenText"))
         
         self.addLayout(Row1)
         self.addLayout(Row2)
@@ -77,15 +79,48 @@ class MainWindow(QtWidgets.QMainWindow):
         self.progressBar = ProgressBar()
         self.addLayout(self.progressBar)
         
-    def createInputBoxFrame(self,contentWidget,description):
+        Row1 = QtWidgets.QHBoxLayout()
+        Row1.setContentsMargins(15,5,15,0)
+        
+        self.totalUnderminedMeritsLabel = ValueLabel("Total Earned\nMerits")
+        self.activeUnderminedMeritsLabel = ValueLabel("Active\nMerits")
+        self.inactiveUnderminedMeritsLabel = ValueLabel("Inactive\nMerits")
+        self.meritsNeededLabel = ValueLabel("Remaining\nMerits","OrangeText")
+        
+        Row1.addLayout(self.totalUnderminedMeritsLabel)
+        Row1.addLayout(self.activeUnderminedMeritsLabel)
+        Row1.addLayout(self.inactiveUnderminedMeritsLabel)
+        Row1.addLayout(self.meritsNeededLabel)
+        
+        Row2 = QtWidgets.QHBoxLayout()
+        Row2.setContentsMargins(15,0,15,0)
+        
+        
+        self.meritsPerUnderminerRemainingLabel = ValueLabel("Remaining Merits\nPer Commander","OrangeText")
+        self.meritsPerUnderminerLabel = ValueLabel("Total Merits\nPer Commander","OrangeText")
+        self.killsPerUnderminerLabel = ValueLabel("Remaining Kills\nPer Commander","OrangeText")
+        
+        Row2.addLayout(self.meritsPerUnderminerLabel)
+        Row2.addLayout(self.killsPerUnderminerLabel)
+        Row2.addLayout(self.meritsPerUnderminerRemainingLabel)
+        
+        self.addLayout(Row1)
+        self.addLayout(Row2)
+        
+        self.updateMerits()
+        
+    def createInputBoxFrame(self,contentWidget,description,identifier = None):
         L1 = QtWidgets.QVBoxLayout()
         L1.setContentsMargins(0,0,0,0)
         L1.addStretch(0)
         
         TextLabel = QtWidgets.QLabel()
         TextLabel.setText(description)
-        TextLabel.setObjectName("InputLabel"+description[-4:])
         TextLabel.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
+        
+        if identifier:
+            TextLabel.setObjectName(identifier)
+            
         L1.addWidget(TextLabel)
         
         Frame = QtWidgets.QFrame()
@@ -100,6 +135,34 @@ class MainWindow(QtWidgets.QMainWindow):
         L1.addStretch(0)
         
         return L1
+    
+    ## now for the updater functions ##
+    
+    def updateMerits(self,
+                     systemTrigger = 0000,
+                     meritsTotal = 0000,
+                     meritsRedeemed = 0000,
+                     activeUnderminedMerits = 0000,
+                     inactiveUnderminedMerits = 0000,
+                     totalUnderminedMerits = 0000,
+                     
+                     meritsNeeded = 0000,
+                     meritsPerUnderminer = 0000,
+                     meritsPerUnderminerRemaining = 0000,
+                     killsPerUnderminer = 0000,
+                     
+                     ):
+        
+        self.totalUnderminedMeritsLabel.setValue(totalUnderminedMerits)
+        self.activeUnderminedMeritsLabel.setValue(activeUnderminedMerits)
+        self.inactiveUnderminedMeritsLabel.setValue(inactiveUnderminedMerits)
+        
+        self.meritsNeededLabel.setValue(meritsNeeded)
+        self.meritsPerUnderminerRemainingLabel.setValue(meritsPerUnderminerRemaining)
+        self.meritsPerUnderminerLabel.setValue(meritsPerUnderminer)
+        self.killsPerUnderminerLabel.setValue(killsPerUnderminer)
+        
+        self.progressBar.setProgress(systemTrigger,meritsTotal,meritsRedeemed,activeUnderminedMerits,inactiveUnderminedMerits)
 
 class SystemSelector(QtWidgets.QLineEdit):
     def __init__(self):
@@ -112,6 +175,31 @@ class NumberInput(QtWidgets.QSpinBox):
         self.setFont(BodyFont)
         self.setMinimum(0)
         self.setMaximum(100000)
+
+class ValueLabel(QtWidgets.QVBoxLayout):
+    def __init__(self,description,identifier = None):
+        super(ValueLabel,self).__init__()
+        
+        self.setContentsMargins(5,0,0,5)
+        
+        TextLabel = QtWidgets.QLabel()
+        TextLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        TextLabel.setText(description)
+        TextLabel.setFont(SubtitleFont)
+        
+        self.dataLabel = QtWidgets.QLabel()
+        self.dataLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        self.dataLabel.setFont(BodyFont)
+
+        if identifier:
+            TextLabel.setObjectName(identifier)
+            self.dataLabel.setObjectName(identifier)
+        
+        self.addWidget(TextLabel)
+        self.addWidget(self.dataLabel)
+    
+    def setValue(self,value):
+        self.dataLabel.setText(str(value))
         
 class ProgressBar(QtWidgets.QVBoxLayout):
     def __init__(self):
@@ -167,17 +255,14 @@ class ProgressBar(QtWidgets.QVBoxLayout):
         self.addLayout(Row1)
         self.addLayout(Row2)
         
-        self.setProgress(54325,52939,0,0,0)
-        
     def setProgress(self,systemTrigger,meritsTotal,meritsRedeemed,activeUnderminedMerits,inactiveUnderminedMerits):
+        if systemTrigger > meritsTotal:
+            self.completionLabel.setText("Completion: {0}%".format(int(meritsTotal/systemTrigger*100)))
+        else:
+            self.completionLabel.setText("Completion: DUNKED!")
         self.progressLabel.setText("{0}/{1} merits".format(meritsTotal,systemTrigger))
+            
         if systemTrigger > 0:
-            
-            if systemTrigger > meritsTotal:
-                self.completionLabel.setText("Completion: {0}%".format(int(meritsTotal/systemTrigger*100)))
-            else:
-                self.completionLabel.setText("Completion: DUNKED!")                                 
-            
             barWidth = self.frame.childrenRegion().boundingRect().width()
             redeemedBarWidth = min(int(barWidth*meritsRedeemed/systemTrigger),barWidth)
             activeBarWidth = min(int(barWidth*activeUnderminedMerits/systemTrigger),barWidth-redeemedBarWidth)
@@ -197,9 +282,11 @@ QMainWindow {Background-Color:#071519; padding: 0px}
 QWidget { padding: 0px; border: 0px; Background-Color: rgba(0,0,0,0) }
 
 QLabel {Color: #58CFFA;}
-QLabel#InputLabelemed {Color: #4CAF0B;}
+QLabel#PinkText {Color: #FF56B3;}
+QLabel#GreenText {Color: #4CAF0B;}
+QLabel#OrangeText {Color: #F48D1C;}
 
-.QFrame {Background-Color:#3B2049;min-height:30px;border: 6px ridge #4D2973}
+.QFrame {Background-Color:#3B2049;border: 6px ridge #4D2973}
 
 QLineEdit,QSpinBox {Color: #58CFFA; Background-Color:#3B2049}
 
@@ -208,7 +295,7 @@ QFrame#UnderminedActiveMeritsBar {Background-Color: #4AB1D3; border: 4px solid #
 QFrame#UnderminedInactiveMeritsBar {Background-Color: #4AB1D3; border: 4px solid #52C3E5}
 QFrame#RedeemedMeritsBar, QFrame#UnderminedActiveMeritsBar,QFrame#UnderminedInactiveMeritsBar {border-style: outset none outset none}
 
-QFrame#ProgressBarBackground {Background-Color:#5B5B60;min-height:40px;border: 8px ridge #6F6F77}
+QFrame#ProgressBarBackground {Background-Color:#5B5B60;min-height:30px;border: 8px ridge #6F6F77}
 
 """
 PROGRESS_BAR_COLORS = [
