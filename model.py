@@ -12,13 +12,13 @@ class Session():
         self.meritsTotal = 0
         self.meritsNeeded = 0
         
-        self.meritsPerUnderminer = 0
-        self.meritsPerUnderminerRemaining = 0
-        self.killsPerUnderminer = 0
-        
         self.totalUnderminedMerits = 0
         self.activeUnderminedMerits = 0
         self.inactiveUnderminedMerits = 0
+
+        self.meritsPerUnderminer = 0
+        self.meritsPerUnderminerRemaining = 0
+        self.killsPerUnderminer = 0
         
         self.activeUnderminers = 0
         
