@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-    <file alias="css">resources/utstyle.css</file>
+    <file>resources/audiowide-regular.ttf</file>
+	<file>resources/SourceSansPro-SemiBold.ttf.</file>
 </qresource>
 </RCC>
