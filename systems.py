@@ -15,12 +15,6 @@ OWNERSHIP_CODES = {
 'ZT': 'Zemina Torval'
 }
 
-PROGRESS_BAR_COLORS = [
-    "#4CAF0B",
-    "#4AB1D3",
-    "#F48D1C"
-]
-
 systems = []
 
 def find_system_by_number(number):
