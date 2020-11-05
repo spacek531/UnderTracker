@@ -117,15 +117,24 @@ class ProgressBar(QtWidgets.QVBoxLayout):
     def __init__(self):
         super(ProgressBar,self).__init__()
         
-        self.setContentsMargins(32,0,32,0)
+        self.setContentsMargins(15,0,15,0)
         
-        self.textLabel = QtWidgets.QLabel()
-        self.textLabel.setText("Completion")
-        self.textLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
-        self.addWidget(self.textLabel)
+        
+        Row1 = QtWidgets.QHBoxLayout()
+        Row1.setContentsMargins(0,0,0,0)
+        
+        self.completionLabel = QtWidgets.QLabel()
+        self.completionLabel.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
 
-        Frame = QtWidgets.QFrame()
-        Frame.setObjectName("ProgressBarBackground")
+        self.progressLabel = QtWidgets.QLabel()
+        self.progressLabel.setAlignment(Qt.AlignRight | Qt.AlignBottom)
+        
+        Row1.addWidget(self.completionLabel)
+        Row1.addWidget(self.progressLabel)
+        
+        
+        self.frame = QtWidgets.QFrame()
+        self.frame.setObjectName("ProgressBarBackground")
         
         BarLayout = QtWidgets.QHBoxLayout()
         BarLayout.setContentsMargins(0,0,0,0)
@@ -140,21 +149,48 @@ class ProgressBar(QtWidgets.QVBoxLayout):
         self.underminedInactiveBar = QtWidgets.QFrame()
         self.underminedInactiveBar.setObjectName("UnderminedInactiveMeritsBar")
         
-        Frame.setLayout(BarLayout)
+        self.frame.setLayout(BarLayout)
         
         BarLayout.addWidget(self.redeemedBar)
         BarLayout.addWidget(self.underminedInactiveBar)
         BarLayout.addWidget(self.underminedActiveBar)
         BarLayout.addStretch(0)
         
-        self.addWidget(Frame)
+        
+        Row2 = QtWidgets.QHBoxLayout()
+        Row2.setContentsMargins(15,0,15,0)
+        
+        Row2.addSpacing(15)
+        Row2.addWidget(self.frame)
+        Row2.addSpacing(15)
+        
+        self.addLayout(Row1)
+        self.addLayout(Row2)
+        
+        self.setProgress(54325,52939,0,0,0)
         
     def setProgress(self,systemTrigger,meritsTotal,meritsRedeemed,activeUnderminedMerits,inactiveUnderminedMerits):
+        self.progressLabel.setText("{0}/{1} merits".format(meritsTotal,systemTrigger))
         if systemTrigger > 0:
-            self.textLabel.setText("Completion: {0}% {1}/{2}".format(int(meritsTotal/systemTrigger),meritsTotal,systemTrigger))
             
+            if systemTrigger > meritsTotal:
+                self.completionLabel.setText("Completion: {0}%".format(int(meritsTotal/systemTrigger*100)))
+            else:
+                self.completionLabel.setText("Completion: DUNKED!")                                 
+            
+            barWidth = self.frame.childrenRegion().boundingRect().width()
+            redeemedBarWidth = min(int(barWidth*meritsRedeemed/systemTrigger),barWidth)
+            activeBarWidth = min(int(barWidth*activeUnderminedMerits/systemTrigger),barWidth-redeemedBarWidth)
+            inactiveBarWidth = min(int(barWidth*inactiveUnderminedMerits/systemTrigger),barWidth-redeemedBarWidth-activeBarWidth) 
+            
+            self.redeemedBar.setFixedWidth(redeemedBarWidth)
+            self.underminedActiveBar.setFixedWidth(activeBarWidth)
+            self.underminedInactiveBar.setFixedWidth(inactiveBarWidth)
         else:
-            self.textLabel.setText("Completion: 0%")
+            self.completionLabel.setText("Completion: 0%")
+            self.redeemedBar.setFixedWidth(0)
+            self.underminedActiveBar.setFixedWidth(0)
+            self.underminedInactiveBar.setFixedWidth(0)
 
 TOP_LEVEL_CSS ="""
 QMainWindow {Background-Color:#071519; padding: 0px}
@@ -167,11 +203,10 @@ QLabel#InputLabelemed {Color: #4CAF0B;}
 
 QLineEdit,QSpinBox {Color: #58CFFA; Background-Color:#3B2049}
 
-QFrame#RedeemedMeritsBar, QFrame#UnderminedActiveMeritsBar,QFrame#UnderminedInactiveMeritsBar {border-style: outset none outset none}
 QFrame#RedeemedMeritsBar {Background-Color: #4CAF0B; border: 4px solid #57C60D}
 QFrame#UnderminedActiveMeritsBar {Background-Color: #4AB1D3; border: 4px solid #52C3E5}
 QFrame#UnderminedInactiveMeritsBar {Background-Color: #4AB1D3; border: 4px solid #52C3E5}
-
+QFrame#RedeemedMeritsBar, QFrame#UnderminedActiveMeritsBar,QFrame#UnderminedInactiveMeritsBar {border-style: outset none outset none}
 
 QFrame#ProgressBarBackground {Background-Color:#5B5B60;min-height:40px;border: 8px ridge #6F6F77}
 

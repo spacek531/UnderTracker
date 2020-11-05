@@ -8,13 +8,14 @@ class Session():
     def __init__():
         self.systemName = ""
         self.systemTrigger = 0
-        self.meritsRedeemed = 0
         self.meritsTotal = 0
-        self.meritsNeeded = 0
+        self.meritsRedeemed = 0
         
-        self.totalUnderminedMerits = 0
         self.activeUnderminedMerits = 0
         self.inactiveUnderminedMerits = 0
+
+        self.totalUnderminedMerits = 0        
+        self.meritsNeeded = 0
 
         self.meritsPerUnderminer = 0
         self.meritsPerUnderminerRemaining = 0
