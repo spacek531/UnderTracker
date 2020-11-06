@@ -1,19 +1,20 @@
 
 MERITS_PER_KILL = 30
 
-OWNERSHIP_CODES = {
-"ZH": 'Zachary Hudson',
-"EM": 'Edmund Mahon',
-"AD": 'Aisling Duval',
-"ALD": 'Arissa Lavingy-Duval',
-"DP": 'Denton Patreus',
-"YG": 'Yuri Grom',
-"PA": 'Pranav Antal',
-'FC': 'Felicia Winters',
-'LYR': 'Li Yong-Rui',
-'ACD': 'Archon Delaine',
-'ZT': 'Zemina Torval'
-}
+OWNERSHIP_CODES = [
+"NB", # nobody
+"ZH",#: 'Zachary Hudson',
+"EM",#: 'Edmund Mahon',
+"AD",#: 'Aisling Duval',
+"ALD",#: 'Arissa Lavingy-Duval',
+"DP",#: 'Denton Patreus',
+"YG",#: 'Yuri Grom',
+"PA",#: 'Pranav Antal',
+'FC',#: 'Felicia Winters',
+'LYR',#: 'Li Yong-Rui',
+'ACD',#: 'Archon Delaine',
+'ZT'#: 'Zemina Torval'
+]
 
 systems = []
 

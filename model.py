@@ -9,6 +9,7 @@ class Session():
         self.mainWindow = mainWindow
         
         self.systemName = ""
+        self.systemOwner = 0
         self.systemTrigger = 0
         self.meritsTotal = 0
         self.meritsRedeemed = 0
@@ -51,15 +52,22 @@ class Session():
         """sets the system trigger"""
         self.systemTrigger = newTrigger
         self.recalculateMerits()
+        # send this to MainWindow?
         
     def setSystemName(self,newName):
         """sets the system name"""
         self.systemName = newName
+        # send this to MainWindow?
+        
+    def setSystemOwner(self,newOwnerId):
+        self.systemOwner = newOwnerId
+        # send this to MainWindow
         
     def setMeritsRedeemed(self,newRedeemed):
         """sets the redeemed merits"""
         self.meritsRedeemed = newRedeemed
         self.recalculateMerits()
+        # send this to MainWindow?
             
     def updateUnderminerMerits(self):
         """Recalculates merits when an underminer's merits changes"""

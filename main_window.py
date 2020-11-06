@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import Qt
 
 import resources
-import model
+import model, controller
 
 #QtGui.QFontDatabase.addApplicationFont(":/resources/Audiowide_Regular.ttf")
 
@@ -24,12 +24,12 @@ class MainWindow(QtWidgets.QMainWindow):
         CentralWidget.setObjectName("CentralWidget")
         CentralWidget.setFont(TitleFont)
         self.setCentralWidget(CentralWidget)
+
+        self.session = model.Session(self)        
         
         self.createHeader()
         self.createManagementSection()
         self.createReportingSection()
-        
-        self.session = model.Session(self)
         
     def addWidget(self,widget):
         self.VLayout.addWidget(widget)
@@ -63,7 +63,7 @@ class MainWindow(QtWidgets.QMainWindow):
         Row1.setContentsMargins(15,5,15,0)
         Row2.setContentsMargins(15,0,15,10)
         
-        self.systemSelector = SystemSelector()
+        self.systemSelector = SystemSelector(self.session)
         
         Row1.addLayout(self.createInputBoxFrame(self.systemSelector,"System"))
         Row1.addSpacing(30)
@@ -184,10 +184,13 @@ class MainWindow(QtWidgets.QMainWindow):
                           ):
         self.totalUnderminersLabel.setValue(totalUnderminers)
 
-class SystemSelector(QtWidgets.QLineEdit):
-    def __init__(self):
+class SystemSelector(QtWidgets.QComboBox):
+    def __init__(self,session):
         super(SystemSelector,self).__init__()
         self.setFont(BodyFont)
+        self.setEditable(True)
+        self.installEventFilter(controller.SystemController(self,session))
+        
 
 class NumberInput(QtWidgets.QSpinBox):
     def __init__(self):
@@ -308,7 +311,7 @@ QLabel#OrangeText {Color: #F48D1C;}
 
 .QFrame {Background-Color:#001E4C;border: 6px ridge #002A6B}
 
-QLineEdit,QSpinBox,QMultiBox {Color: #FF7CB7; Background-Color:#001E4C}
+QLineEdit,QSpinBox,QComboBox {Color: #FF7CB7; Background-Color:#001E4C; border-color: #002A6B}
 
 QFrame#RedeemedMeritsBar {Background-Color: #4CAF0B; border: 4px solid #57C60D}
 QFrame#UnderminedActiveMeritsBar {Background-Color: #4AB1D3; border: 4px solid #52C3E5}
