@@ -1,0 +1,125 @@
+lhs 2088, 67606, zh
+groombridge 1618, 75359, zh
+caspatsuria, 9366, zh
+col 258 sector cy-n b21-0, 9718, zh
+lhs 3447, 13180, zh
+ltt 9795, 11812, zh
+burr, 13692, zh
+lushertha, 55021, zh
+lhs 1541, 22722, zh
+sol, 33998, zh
+anlave, 47295, zh
+rana, 20679, zh
+lhs 3749, 17419, zh
+lp 291-34, 18283, zh
+rati irtii, 10436, zh
+phanes, 23075, zh
+atropos, 13751, zh
+mulungu, 13282, zh
+onduwatya, 10837, zh
+nltt 46403, 11134, zh
+gcrv 2743, 11924, zh
+hyades sector gh-v d2-135, 12007, zh
+phra mool,  12098, zh
+aornum, 13810, zh
+othime,  12889, zh
+clayahu, 9826, zh
+adeo, 13260, zh
+gliese 868, 14768, zh
+wat yu, 17662, zh
+wolf 906, 15554, zh
+arnemil, 15968, zh
+abi, 16695, zh
+37 xi bootis, 36573, zh
+tun, 28974, zh
+shoujeman, 24937, zh
+dongkum, 13102, zh
+kaushpoos, 13274, zh
+rho capricorni, 10762, zh
+jiuyou, 14522, zh
+lung, 30172, zh
+vega, 35671, zh
+39 serpentis, 17430, zh
+alpha fornacis, 14977, zh
+lenty,  9606, zh
+lhs 1197,  15150, zh
+mariyacoch, 12336, zh
+g 250-34,  29849, zh
+brhitzameno,  25758, zh
+mislika, 12389, zh
+bd+42 3917, 14630, zh
+ptah, 13988, zh
+ross 33,  27471, zh
+epsilon scorpii,  12959, zh
+kanus,  11494, zh
+ltt 15574,  12276, zh
+hr 2776,  12047, zh
+lhs 3885,  18914, zh
+16 cygni,  17159, zh
+wolf 25,  23151, zh
+wolf 867,  17605, zh
+14 geminorum,  18484, zh
+venetic,  14018, zh
+gilgamesh,  14194, zh
+lhs 3577,  25544, zh
+neits,  12215, zh
+parutis,  18589, zh
+gd 219,  14686, zh
+lalande 39866,  14261, zh
+nltt 46621,  27172, zh
+mombaluma,  16052, zh
+lhs 1681,  19144, zh
+mantxe,  13269, zh
+mulachi,  16178, zh
+ltt 15449,  14504, zh
+allowini,  10798, zh
+lhs 6427,  21671, zh
+
+kanati,  21793, fw
+binjamingi, 19704, fw
+erivit,  19490, fw
+skardee,  13171, fw
+uteran, 16765, fw
+fousang, 20813, fw
+kali, 149040, fw
+sosong, 12456, fw
+carnoeck, 15441, fw
+lp 906-9, 16632, fw
+sanos, 16354, fw
+sawali, 13733, fw
+odondage, 13169, fw
+neali, 11274, fw
+169 g. canis majoris, 11037, fw
+albicevci, 8873, fw
+velians, 9146, fw
+hip 39908, 8385, fw
+hip 38747, 8483, fw
+malgariji, 7184, fw
+hip 50489,  7699, fw
+nltt 19808,  36272, fw
+54 g. antlia, 21600, fw
+18 puppis,  51219, fw
+neche, 37929, fw
+skeggiko o, 13659, fw
+marahli, 15802, fw
+lhs 1887, 18366, fw
+momoirent, 21041, fw
+lhs 235,  15010, fw
+morixa, 15230, fw
+fan yin, 22411, fw
+elli,  19684, fw
+taexalk, 9121, fw
+ragapajo, 16443, fw
+mexicatese, 32258, fw
+oscabi, 8192, fw
+lft 601,  20091, fw
+kaura, 16546, fw
+mendindui, 15229, fw
+namte, 24364, fw
+lhs 1928,  18696, fw
+ahemakino, 7825, fw
+
+san tu,  17576, em
+akheilos,  32625, em
+ao kond,  9613, em
+chukchan, 9528, em

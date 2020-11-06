@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt
 import resources
 import model, controller
 
-#QtGui.QFontDatabase.addApplicationFont(":/resources/Audiowide_Regular.ttf")
+NUMBER_OF_UNDERMINERS = 16
 
 TitleFont = QtGui.QFont("Consolas",16,100)
 SubtitleFont = QtGui.QFont("Consolas",14,100)
@@ -12,7 +12,67 @@ BodyFont = QtGui.QFont("Lucida Sans",16,100)
 SubBodyFont = QtGui.QFont("Lucida Sans",12,100)
 SmallFont = QtGui.QFont("Lucida Sans",10,100)
 
-NUMBER_OF_UNDERMINERS = 16
+class SystemSelector(QtWidgets.QComboBox):
+    def __init__(self,session):
+        super(SystemSelector,self).__init__()
+        self.setFont(BodyFont)
+        self.setEditable(True)
+        self.controller = controller.SystemController(self,session)
+        
+
+class UsernameSelector(QtWidgets.QComboBox):
+    def __init__(self,miner):
+        super(UsernameSelector,self).__init__()
+        self.setFont(BodyFont)
+        self.setEditable(True)
+        self.controller = controller.UsernameController(self,miner)        
+
+class NumberInput(QtWidgets.QSpinBox):
+    def __init__(self,callback):
+        super(NumberInput,self).__init__()
+        self.setFont(BodyFont)
+        self.setMinimum(0)
+        self.setMaximum(999999)
+        self.setSingleStep(30)
+        self.controller = controller.NumberController(self,callback)
+
+class PushButton(QtWidgets.QPushButton):
+    def __init__(self,callback):
+        super(PushButton,self).__init__()
+        self.controller = controller.PushButtonController(self,callback)
+
+class ValueLabel(QtWidgets.QVBoxLayout):
+    def __init__(self,description,identifier = None):
+        super(ValueLabel,self).__init__()
+        
+        self.setContentsMargins(5,0,0,5)
+        
+        self.textLabel = QtWidgets.QLabel()
+        self.textLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        self.textLabel.setText(description)
+        self.textLabel.setFont(SubtitleFont)
+        
+        self.dataLabel = QtWidgets.QLabel()
+        self.dataLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        self.dataLabel.setFont(BodyFont)
+
+        if identifier:
+            self.textLabel.setObjectName(identifier)
+            self.dataLabel.setObjectName(identifier)
+        
+        self.addWidget(self.textLabel)
+        self.addWidget(self.dataLabel)
+    
+    def setValue(self,value):
+        self.dataLabel.setText(str(value))
+        
+    def setColor(self,colorString = None):
+        if colorString:
+            self.dataLabel.setStyleSheet("QLabel {{ color: \#{0}}}".format(colorString))
+            self.textLabel.setStyleSheet("QLabel {{ color: \#{0}}}".format(colorString))
+        else:
+            self.dataLabel.setStyleSheet("")
+            self.textLabel.setStyleSheet("")
 
 class MainWindow(QtWidgets.QMainWindow):
     def createInputBoxFrame(self,contentWidget,description,identifier = None):
@@ -132,21 +192,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.totalUnderminersLabel = ValueLabel("Total\nCommanders")
         #self.inactiveUnderminedMeritsLabel = ValueLabel("Inactive\nMerits")
         self.meritsNeededLabel = ValueLabel("Remaining\nMerits","OrangeText")
+        self.meritsPerUnderminerRemainingLabel = ValueLabel("Remaining Merits\nPer Commander","OrangeText")
+        self.meritsPerUnderminerLabel = ValueLabel("Total Merits\nPer Commander")
+        self.killsPerUnderminerLabel = ValueLabel("Remaining Kills\nPer Commander","OrangeText")
         
         Row1.addLayout(self.totalUnderminedMeritsLabel)
         Row1.addLayout(self.totalUnderminersLabel)
         #Row1.addLayout(self.inactiveUnderminedMeritsLabel)
-        Row1.addLayout(self.meritsNeededLabel)
+        Row1.addLayout(self.meritsPerUnderminerLabel)
         
         Row2 = QtWidgets.QHBoxLayout()
         Row2.setContentsMargins(15,0,15,0)
         
-        
-        self.meritsPerUnderminerRemainingLabel = ValueLabel("Remaining Merits\nPer Commander","OrangeText")
-        self.meritsPerUnderminerLabel = ValueLabel("Total Merits\nPer Commander","OrangeText")
-        self.killsPerUnderminerLabel = ValueLabel("Remaining Kills\nPer Commander","OrangeText")
-        
-        Row2.addLayout(self.meritsPerUnderminerLabel)
+
+        Row2.addLayout(self.meritsNeededLabel)        
         Row2.addLayout(self.killsPerUnderminerLabel)
         Row2.addLayout(self.meritsPerUnderminerRemainingLabel)
         
@@ -181,7 +240,9 @@ class MainWindow(QtWidgets.QMainWindow):
                      killsPerUnderminer = 0000,
                      
                      ):
-        """
+        
+        WinnerColor = "4CAF0B"
+        
         if meritsNeeded <= 0 and systemTrigger > 0:
             self.totalUnderminedMeritsLabel.setColor(WinnerColor)
             self.meritsNeededLabel.setColor(WinnerColor)
@@ -196,7 +257,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.meritsPerUnderminerLabel.setColor()
             self.killsPerUnderminerLabel.setColor()
             self.totalUnderminersLabel.setColor()
-        """  
+          
         self.triggerInput.setValue(systemTrigger)
         self.redeemedInput.setValue(meritsRedeemed)
         self.totalUnderminedMeritsLabel.setValue(totalUnderminedMerits)
@@ -216,68 +277,6 @@ class MainWindow(QtWidgets.QMainWindow):
                           underminers = []
                           ):
         self.totalUnderminersLabel.setValue(totalUnderminers)
-
-class SystemSelector(QtWidgets.QComboBox):
-    def __init__(self,session):
-        super(SystemSelector,self).__init__()
-        self.setFont(BodyFont)
-        self.setEditable(True)
-        self.controller = controller.SystemController(self,session)
-        
-
-class UsernameSelector(QtWidgets.QComboBox):
-    def __init__(self,miner):
-        super(UsernameSelector,self).__init__()
-        self.setFont(BodyFont)
-        self.setEditable(True)
-        self.controller = controller.UsernameController(self,miner)        
-
-class NumberInput(QtWidgets.QSpinBox):
-    def __init__(self,callback):
-        super(NumberInput,self).__init__()
-        self.setFont(BodyFont)
-        self.setMinimum(0)
-        self.setMaximum(999999)
-        self.setSingleStep(30)
-        self.controller = controller.NumberController(self,callback)
-
-class PushButton(QtWidgets.QPushButton):
-    def __init__(self,callback):
-        super(PushButton,self).__init__()
-        self.controller = controller.PushButtonController(self,callback)
-
-class ValueLabel(QtWidgets.QVBoxLayout):
-    def __init__(self,description,identifier = None):
-        super(ValueLabel,self).__init__()
-        
-        self.setContentsMargins(5,0,0,5)
-        
-        self.textLabel = QtWidgets.QLabel()
-        self.textLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
-        self.textLabel.setText(description)
-        self.textLabel.setFont(SubtitleFont)
-        
-        self.dataLabel = QtWidgets.QLabel()
-        self.dataLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
-        self.dataLabel.setFont(BodyFont)
-
-        if identifier:
-            self.textLabel.setObjectName(identifier)
-            self.dataLabel.setObjectName(identifier)
-        
-        self.addWidget(self.textLabel)
-        self.addWidget(self.dataLabel)
-    
-    def setValue(self,value):
-        self.dataLabel.setText(str(value))
-        
-    def setColor(self,colorString = None):
-        if colorString:
-            self.dataLabel.setStyleSheet("QLabel {{ color: \#{0}}}".format(colorString))
-            self.textLabel.setStyleSheet("QLabel {{ color: \#{0}}}".format(colorString))
-        else:
-            self.dataLabel.setStyleSheet("")
-            self.textLabel.setStyleSheet("")
         
 class ProgressBar(QtWidgets.QVBoxLayout):
     WinnerColor = "4CAF0B"

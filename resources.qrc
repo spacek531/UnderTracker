@@ -1,6 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
     <file>resources/STARLIGHT_BRIGADE_UM.png</file>
-	<file>resources/SPRITE_BLACK.png</file>
 </qresource>
 </RCC>
