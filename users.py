@@ -1,4 +1,5 @@
 
+
 class UserProxy():
     def __init__(self,discordHandle,nicknames,truename = None):
         self.discordHandle = discordHandle
@@ -42,3 +43,12 @@ KNOWN_USERS = [
     UserProxy("Kraig",["kraig lane"],"Kraig Lane"),
     UserProxy("Flebens",["mace cartier","space dad"],"Mace Cartier")
 ]
+
+def find_user_by_number(number):
+    if number >= len(KNOWN_USERS) or number < 0:
+        return None
+    return KNOWN_USERS[number]
+
+def get_user_names():
+    return [user.trueName for user in KNOWN_USERS]
+

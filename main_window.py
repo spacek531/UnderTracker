@@ -192,7 +192,6 @@ class SystemSelector(QtWidgets.QComboBox):
         self.setFont(BodyFont)
         self.setEditable(True)
         self.controller = controller.SystemController(self,session)
-        self.installEventFilter(self.controller)
 
 class NumberInput(QtWidgets.QSpinBox):
     def __init__(self,callback):
@@ -302,6 +301,83 @@ class ProgressBar(QtWidgets.QVBoxLayout):
             self.redeemedBar.setFixedWidth(0)
             self.underminedActiveBar.setFixedWidth(0)
             self.underminedInactiveBar.setFixedWidth(0)
+            
+class UnderminerGrid(QtWidgets.QGridLayout):
+    maxRows = 8
+    columnsPerCard = 5
+    spacerColumnWidth = 10
+    def __init__(self,session):
+        super(UnderminerGrid,self).__init__()
+        self.session = session
+        self.setContentsMargins(15,0,0,15)
+        self.setVerticalSpacing(2)
+        self.setHorizontalSpacing(5)
+        
+        self.currentRow = 0
+        self.currentColumn = 0
+        
+    def createUnderminer(self):
+        if self.currentRow == 0 and self.currentColumn > 0:
+            self.setColumnMinimumWidth(self.currentColumn*UnderminerGrid.ColumnsPerCard - 1,spacerColumnWidth)
+    
+        UnderminerCard = UnderminerCards()        
+        
+        self.addWidget(UnderminerCard.buttonWidget,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard)
+        self.addWidget(UnderminerCard.nameFrame,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard + 1)
+        self.addWidget(UnderminerCard.meritFrame,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard + 2)
+        
+        self.currentRow += 1
+        if self.currentRow == UnderminerGrid.maxRows:
+            self.currentRow = 0
+            self.currentColumn += 1
+            
+        return UnderminerCard
+            
+class UnderminerCards():
+    def __init__(self):
+        self.buttonWidget = QtWidgets.QWidget()
+        ButtonLayout = QtWidgets.QHBoxLayout()
+        ButtonLayout.setContentsMargins(0,0,0,0)
+        self.buttonWidget.setLayout(ButtonLayout)
+        
+        self.activeButton = QtWidgets.QPushButton()
+        self.activeButton.setObjectName("MinerActiveButton")
+        self.activeButton.setText("+")
+        
+        self.dumpButton = QtWidgets.QPushButton()
+        self.dumpButton.setObjectName("MinerDumpButton")
+        self.dumpButton.setText("^")
+        
+        ButtonLayout.addWidget(self.activeButton)
+        ButtonLayout.addWidget(self.dumpButton)
+        
+        self.usernameInput = QtWidgets.QComboBox()
+        self.meritInput = QtWidgets.QSpinBox()
+        
+        self.nameFrame = createInputOutline(self.usernameInput)
+        self.meritFrame = createInputOutline(self.meritInput)
+        
+        self.target = QtWidgets.QLabel()
+        self.target.setObjectName("OrangeText")
+        self.target.setMinimumWidth(40)
+        
+    def createInputOutline(self,contentWidget):
+
+        Frame = QtWidgets.QFrame()
+        Frame.setObjectName("InputFrame")
+        L2 = QtWidgets.QVBoxLayout()
+        L2.setContentsMargins(0,0,0,0)
+        Frame.setLayout(L2)
+        
+        L2.addWidget(contentWidget)
+        
+        return Frame
+    
+    def setTargetMerits(self,target):
+        if target < 0:
+            self.target.setText("")
+        else:
+            self.target.setText("/{0}".format(target))
 
 TOP_LEVEL_CSS ="""
 QMainWindow {Background-Color:#071519; padding: 0px}

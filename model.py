@@ -27,13 +27,12 @@ class Session():
         self.activeUnderminers = 0
         self.totalUnderminers = 0
         
-        self.umid = 0
         self.underminers = []
         
     def recalculateMerits(self):
         """calculates all merit values and updates target merits of each underminer"""
         self.meritsTotal = self.meritsRedeemed + self.totalUnderminedMerits
-        self.meritsNeeded = self.systemTrigger - self.meritsTotal
+        self.meritsNeeded = max(0,self.systemTrigger - self.meritsTotal)
         if self.meritsNeeded > 0:
             self.meritsPerUnderminer = math.ceil((self.systemTrigger - self.meritsRedeemed)/max(1,self.activeUnderminers))
             self.meritsPerUnderminerRemaining = math.ceil((self.systemTrigger - self.meritsRedeemed - self.totalUnderminedMerits)/max(1,self.activeUnderminers))
@@ -102,7 +101,11 @@ class Session():
             print("\a")
             return
         Components = ["""__**{0}:**__""".format(self.systemName.upper())]
-        Components.extend([(miner.associatedUser and "@"+miner.associatedUser.discordHandle or miner.underminerName)+": +"+miner.underminedMerits for miner in self.underminers])
+        for i in range(len(self.underminers)):
+            miner = self.underminers[i]
+            if miner.isActive or len(miner.underminerName) > 0:
+                Components.append("@{0}: +{1}".format(miner.associatedUser and miner.associatedUser.discordHandle or miner.underminerName, miner.underminedMerits))
+        
         Components.append("""**Total: +{0}** {1}/{2}""".format(self.totalUnderminedMerits, self.meritsTotal, self.systemTrigger))
         if self.meritsNeeded > 0:
             Components.append("""{0}% complete""".format(int(self.meritsTotal/systemTrigger)))
@@ -114,8 +117,9 @@ class Session():
         pyperclip.copy(pasteString)
         
     def createUnderminer(self):
-        self.underminers.append(Underminer(self,self.umid))
-        self.umid+=1
+        
+        miner = Underminer(self)
+        self.underminers.append(miner)
         
     def removeUnderminer(self,underminer):
         try:
@@ -136,8 +140,7 @@ class Session():
         self.recalculateMerits()
     
 class Underminer():
-    def __init__(self,session,umid):
-        self.umid = umid
+    def __init__(self,session):
         self.session = session
         self.underminerName = ""
         self.isActive = False
