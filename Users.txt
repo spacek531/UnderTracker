@@ -1,0 +1,34 @@
+## comma-delimited: discord username (id optional), display name
+## double-hash is comment
+
+
+## BRGD members
+Spacek,NWSpacek
+HyrooHimolil,Kate Balthazar
+jordanindenmark,Deftbridge
+UnspeakablePat,UnspeakablePat
+Rasperry,Rasperry
+hubcap,HUB-CAP
+Ner0, Nero Prizak
+Xenophon117,Xenophon117
+djp5,Erkat Posner
+donkipunx,Donkipunx
+Avalyn,Avalyndis
+Terra Sheer,Terra Sheer
+SPNKR,SPNKR
+otolock,Otolock
+Buster,Buster335
+BTEC GLOBAL ELITE,Bertioli
+Asagi Asagiri,Xenocrunch
+
+## other ADC members
+
+z64555,z64555
+schielman,Schielman
+AERO,AEROassault
+Cyanidex,Cyanidex
+Mo Mo,Mo Mo
+|3lue|2aven,|3lue|2aven
+Octavius,Octavius
+Kraig,Kraig Lane
+Flebens,Mace Cartier)

@@ -1,125 +1,131 @@
-lhs 2088, 67606, zh
-groombridge 1618, 75359, zh
-caspatsuria, 9366, zh
-col 258 sector cy-n b21-0, 9718, zh
-lhs 3447, 13180, zh
-ltt 9795, 11812, zh
-burr, 13692, zh
-lushertha, 55021, zh
-lhs 1541, 22722, zh
-sol, 33998, zh
-anlave, 47295, zh
-rana, 20679, zh
-lhs 3749, 17419, zh
-lp 291-34, 18283, zh
-rati irtii, 10436, zh
-phanes, 23075, zh
-atropos, 13751, zh
-mulungu, 13282, zh
-onduwatya, 10837, zh
-nltt 46403, 11134, zh
-gcrv 2743, 11924, zh
-hyades sector gh-v d2-135, 12007, zh
-phra mool,  12098, zh
-aornum, 13810, zh
-othime,  12889, zh
-clayahu, 9826, zh
-adeo, 13260, zh
-gliese 868, 14768, zh
-wat yu, 17662, zh
-wolf 906, 15554, zh
-arnemil, 15968, zh
-abi, 16695, zh
-37 xi bootis, 36573, zh
-tun, 28974, zh
-shoujeman, 24937, zh
-dongkum, 13102, zh
-kaushpoos, 13274, zh
-rho capricorni, 10762, zh
-jiuyou, 14522, zh
-lung, 30172, zh
-vega, 35671, zh
-39 serpentis, 17430, zh
-alpha fornacis, 14977, zh
-lenty,  9606, zh
-lhs 1197,  15150, zh
-mariyacoch, 12336, zh
-g 250-34,  29849, zh
-brhitzameno,  25758, zh
-mislika, 12389, zh
-bd+42 3917, 14630, zh
-ptah, 13988, zh
-ross 33,  27471, zh
-epsilon scorpii,  12959, zh
-kanus,  11494, zh
-ltt 15574,  12276, zh
-hr 2776,  12047, zh
-lhs 3885,  18914, zh
-16 cygni,  17159, zh
-wolf 25,  23151, zh
-wolf 867,  17605, zh
-14 geminorum,  18484, zh
-venetic,  14018, zh
-gilgamesh,  14194, zh
-lhs 3577,  25544, zh
-neits,  12215, zh
-parutis,  18589, zh
-gd 219,  14686, zh
-lalande 39866,  14261, zh
-nltt 46621,  27172, zh
-mombaluma,  16052, zh
-lhs 1681,  19144, zh
-mantxe,  13269, zh
-mulachi,  16178, zh
-ltt 15449,  14504, zh
-allowini,  10798, zh
-lhs 6427,  21671, zh
+## comma-delimited: system name, system owner, undermining trigger
+## double-hash is comment
 
-kanati,  21793, fw
-binjamingi, 19704, fw
-erivit,  19490, fw
-skardee,  13171, fw
-uteran, 16765, fw
-fousang, 20813, fw
-kali, 149040, fw
-sosong, 12456, fw
-carnoeck, 15441, fw
-lp 906-9, 16632, fw
-sanos, 16354, fw
-sawali, 13733, fw
-odondage, 13169, fw
-neali, 11274, fw
-169 g. canis majoris, 11037, fw
-albicevci, 8873, fw
-velians, 9146, fw
-hip 39908, 8385, fw
-hip 38747, 8483, fw
-malgariji, 7184, fw
-hip 50489,  7699, fw
-nltt 19808,  36272, fw
-54 g. antlia, 21600, fw
-18 puppis,  51219, fw
-neche, 37929, fw
-skeggiko o, 13659, fw
-marahli, 15802, fw
-lhs 1887, 18366, fw
-momoirent, 21041, fw
-lhs 235,  15010, fw
-morixa, 15230, fw
-fan yin, 22411, fw
-elli,  19684, fw
-taexalk, 9121, fw
-ragapajo, 16443, fw
-mexicatese, 32258, fw
-oscabi, 8192, fw
-lft 601,  20091, fw
-kaura, 16546, fw
-mendindui, 15229, fw
-namte, 24364, fw
-lhs 1928,  18696, fw
-ahemakino, 7825, fw
+## Zachary Hudson
+LHS 2088, ZH, 67606
+Groombridge 1618, ZH, 75359
+Caspatsuria, ZH, 9366
+Col 258 Sector CY-N B21-0, ZH, 9718
+LHS 3447, ZH, 13180
+LTT 9795, ZH, 11812
+Burr, ZH, 13692
+Lushertha, ZH, 55021
+LHS 1541, ZH, 22722
+Sol, ZH, 33998
+Anlave, ZH, 47295
+Rana, ZH, 20679
+LHS 3749, ZH, 17419
+LP 291-34, ZH, 18283
+Rati Irtii, ZH, 10436
+Phanes, ZH, 23075
+Atropos, ZH, 13751
+Mulungu, ZH, 13282
+Onduwatya, ZH, 10837
+NLTT 46403, ZH, 11134
+Gcrv 2743, ZH, 11924
+Hyades Sector GH-V D2-135, ZH, 12007
+Phra Mool, ZH, 12098
+Aornum, ZH, 13810
+Othime, ZH, 12889
+Clayahu, ZH, 9826
+Adeo, ZH, 13260
+Gliese 868, ZH, 14768
+Wat Yu, ZH, 17662
+Wolf 906, ZH, 15554
+Arnemil, ZH, 15968
+Abi, ZH, 16695
+37 Xi Bootis, ZH, 36573
+Tun, ZH, 28974
+Shoujeman, ZH, 24937
+Dongkum, ZH, 13102
+Kaushpoos, ZH, 13274
+Rho Capricorni, ZH, 10762
+Jiuyou, ZH, 14522
+Lung, ZH, 30172
+Vega, ZH, 35671
+39 Serpentis, ZH, 17430
+Alpha Fornacis, ZH, 14977
+Lenty, ZH, 9606
+LHS 1197, ZH, 15150
+Mariyacoch, ZH, 12336
+G 250-34, ZH, 29849
+Brhitzameno, ZH, 25758
+Mislika, ZH, 12389
+Bd+42 3917, ZH, 14630
+Ptah, ZH, 13988
+Ross 33, ZH, 27471
+Epsilon Scorpii, ZH, 12959
+Kanus, ZH, 11494
+LTT 15574, ZH, 12276
+HR 2776, ZH, 12047
+LHS 3885, ZH, 18914
+16 Cygni, ZH, 17159
+Wolf 25, ZH, 23151
+Wolf 867, ZH, 17605
+14 Geminorum, ZH, 18484
+Venetic, ZH, 14018
+Gilgamesh, ZH, 14194
+LHS 3577, ZH, 25544
+Neits, ZH, 12215
+Parutis, ZH, 18589
+GD 219, ZH, 14686
+Lalande 39866, ZH, 14261
+NLTT 46621, ZH, 27172
+Mombaluma, ZH, 16052
+LHS 1681, ZH, 19144
+Mantxe, ZH, 13269
+Mulachi, ZH, 16178
+LTT 15449, ZH, 14504
+Allowini, ZH, 10798
+LHS 6427, ZH, 21671
 
-san tu,  17576, em
-akheilos,  32625, em
-ao kond,  9613, em
-chukchan, 9528, em
+## Felicia Winters
+Kanati, FW, 21793
+Binjamingi, FW, 19704
+Erivit, FW, 19490
+Skardee, FW, 13171
+Uteran, FW, 16765
+Fousang, FW, 20813
+Kali, FW, 149040
+Sosong, FW, 12456
+Carnoeck, FW, 15441
+LP 906-9, FW, 16632
+Sanos, FW, 16354
+Sawali, FW, 13733
+Odondage, FW, 13169
+Neali, FW, 11274
+169 G. Canis Majoris, FW, 11037
+Albicevci, FW, 8873
+Velians, FW, 9146
+Hip 39908, FW, 8385
+Hip 38747, FW, 8483
+Malgariji, FW, 7184
+Hip 50489, FW, 7699
+NLTT 19808, FW, 36272
+54 G. Antlia, FW, 21600
+18 Puppis, FW, 51219
+Neche, FW, 37929
+Skeggiko O, FW, 13659
+Marahli, FW, 8000
+LHS 1887, FW, 18366
+Momoirent, FW, 21041
+LHS 235, FW, 15010
+Morixa, FW, 15230
+Fan Yin, FW, 22411
+Elli, FW, 19684
+Taexalk, FW, 9121
+Ragapajo, FW, 16443
+Mexicatese, FW, 32258
+Oscabi, FW, 8192
+LFT 601, FW, 20091
+Kaura, FW, 16546
+Mendindui, FW, 15229
+Namte, FW, 24364
+LHS 1928, FW, 18696
+Ahemakino, FW, 7825
+
+## Edmund Mahon
+San Tu, EM, 17576
+Akheilos, EM, 32625
+Ao Kond, EM, 9613
+Chukchan, EM, 9528

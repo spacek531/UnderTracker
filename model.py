@@ -9,6 +9,8 @@ class Session():
         self.mainWindow = mainWindow
         
         self.systemName = ""
+        self.systemObject = None
+        
         self.systemOwner = 0
         self.systemTrigger = 0
         self.meritsTotal = 0
@@ -49,11 +51,21 @@ class Session():
                 miner.setTargetBlank()
             
         self.mainWindow.updateMerits(self.systemTrigger,self.meritsTotal,self.meritsRedeemed,self.activeUnderminedMerits,self.inactiveUnderminedMerits,self.totalUnderminedMerits,self.meritsNeeded,self.meritsPerUnderminer,self.meritsPerUnderminerRemaining,self.killsPerUnderminer)
+        
+    def setSystemObject(self,systemObject):
+        self.systemObject = None
+        if systemObject:
+            self.setSystemName(systemObject.name)
+            self.setSystemOwner(systemObject.owner)
+            self.setSystemTrigger(systemObject.systemTrigger)
+            self.systemObject = systemObject
             
     def setSystemTrigger(self,newTrigger):
         """sets the system trigger"""
         self.systemTrigger = newTrigger
         self.recalculateMerits()
+        if self.systemObject:
+            self.systemObject.changeSystemTrigger(newTrigger)
         # send this to MainWindow?
         
     def setSystemName(self,newName):
@@ -63,6 +75,7 @@ class Session():
         
     def setSystemOwner(self,newOwnerId):
         self.systemOwner = newOwnerId
+        self.mainWindow.setSystemOwner(newOwnerId)
         # send this to MainWindow
         
     def setMeritsRedeemed(self,newRedeemed):
@@ -114,7 +127,7 @@ class Session():
         
         Components.append("""**Total: +{0}** {1}/{2}""".format(self.totalUnderminedMerits, self.meritsTotal, self.systemTrigger))
         if self.meritsNeeded > 0:
-            Components.append("""{0}% complete""".format(int(self.meritsTotal/systemTrigger)))
+            Components.append("""{0}% complete""".format(int(100*self.meritsTotal/self.systemTrigger)))
         else:
             Components.append("""**Dunked!**""")
         

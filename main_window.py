@@ -75,6 +75,13 @@ class ValueLabel(QtWidgets.QVBoxLayout):
             self.textLabel.setStyleSheet("")
 
 class MainWindow(QtWidgets.QMainWindow):
+
+    def getOwnerSprite(self,ownerId):
+        if ownerId == 0:
+            return QtGui.QPixmap()
+        else:
+            return QtGui.QPixmap(self.OwnerSheet.copy(QtCore.QRect(0,100*(ownerId-1),200,100)))
+        
     def createInputBoxFrame(self,contentWidget,description,identifier = None):
         L1 = QtWidgets.QVBoxLayout()
         L1.setContentsMargins(0,0,0,0)
@@ -117,10 +124,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.session = model.Session(self)  
         
+    
+        self.OwnerSheet = QtGui.QPixmap(":/resources/SPRITE_BLACK.png")        
+        
         self.createHeader()
         self.createManagementSection()
         self.createReportingSection()
         self.createUnderminerGrid()
+        self.createCopyButton()
         
         for _ in range(NUMBER_OF_UNDERMINERS):
             self.session.createUnderminer()
@@ -166,7 +177,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.powerLogo.setMinimumSize(200,100)
         
         Row1.addWidget(self.powerLogo)
-        Row1.addSpacing(15)
+        Row1.addSpacing(0)
         
         self.triggerInput = NumberInput(self.session.setSystemTrigger)
         self.redeemedInput = NumberInput(self.session.setMeritsRedeemed)
@@ -219,12 +230,29 @@ class MainWindow(QtWidgets.QMainWindow):
         self.underminerGrid = UnderminerGrid()
         self.addLayout(self.underminerGrid)
     
+    def createCopyButton(self):
+        
+        HLayout = QtWidgets.QHBoxLayout()
+        HLayout.setContentsMargins(5,5,5,10)
+        self.copyButton = PushButton(self.session.createDiscordPaste)
+        
+        self.copyButton.setText("Copy to clipboard")
+        
+        HLayout.addStretch()
+        HLayout.addWidget(self.copyButton)
+        HLayout.addStretch()
+        self.addLayout(HLayout)
+        
+    
     def createUnderminer(self,miner):
         card = UnderminerCard(miner)
         self.underminerGrid.addUnderminer(card)
         return card
     
     ## now for the updater functions ##
+    
+    def setSystemOwner(self,ownerId):
+        self.powerLogo.setPixmap(self.getOwnerSprite(ownerId))
     
     def updateMerits(self,
                      systemTrigger = 0000,
@@ -378,7 +406,7 @@ class UnderminerGrid(QtWidgets.QHBoxLayout):
     spacerColumnWidth = 10
     def __init__(self):
         super(UnderminerGrid,self).__init__()
-        self.setContentsMargins(5,0,0,0)
+        self.setContentsMargins(5,0,0,5)
         self.setSpacing(2)
         
         self.columns = []
@@ -404,7 +432,6 @@ class UnderminerCard(QtWidgets.QHBoxLayout):
     
     ActiveStyle = """QPushButton {Color: #FFFFFF; Background-Color: #4CAF0B; border: 3px outset #57C60D}"""
     InactiveStyle = """QPushButton {Color: #FFFFFF; Background-Color: #E50091; border: 3px outset #FF9BC9}"""
-    DumpStyle = ActiveStyle
     
     ButtonSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum,QtWidgets.QSizePolicy.Preferred)
     UsernameSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,QtWidgets.QSizePolicy.Preferred)
@@ -443,7 +470,6 @@ class UnderminerCard(QtWidgets.QHBoxLayout):
         self.dumpButton.setFont(SmallFont)
         self.dumpButton.setText("D")
         self.dumpButton.setMinimumWidth(18)
-        self.dumpButton.setStyleSheet(self.DumpStyle)
         self.dumpButton.setSizePolicy(self.ButtonSizePolicy)
 
         ButtonLayout.addWidget(self.activeButton)
@@ -492,9 +518,9 @@ class UnderminerCard(QtWidgets.QHBoxLayout):
         self.activeButton.setStyleSheet(UnderminerCard.InactiveStyle)
             
     
-
+#QMainWindow {Background-Color:#071519; padding: 0px}
 TOP_LEVEL_CSS ="""
-QMainWindow {Background-Color:#071519; padding: 0px}
+QMainWindow {Background-Color:#FFFFFF; padding: 0px}
 QWidget { padding: 0px; border: 0px; Background-Color: rgba(0,0,0,0) }
 
 QLabel {Color: #58CFFA;}
@@ -512,6 +538,8 @@ QComboBox::down-arrow {
 QComboBox QAbstractItemView {
 Color: #FF7CB7;
 }
+
+QPushButton {Color: #FFFFFF; Background-Color: #4CAF0B; border: 4px outset #57C60D}
 
 QFrame#RedeemedMeritsBar {Background-Color: #4CAF0B; border: 4px solid #57C60D}
 QFrame#UnderminedActiveMeritsBar {Background-Color: #4AB1D3; border: 4px solid #52C3E5}
