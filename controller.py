@@ -1,11 +1,12 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
+import systems, users
 
 class SystemController(QtCore.QObject):
     def __init__(self,comboBox,session):
         super(SystemController,self).__init__()
         self.comboBox = comboBox
         self.session = session
-        
+        self.comboBox.addItems(systems.get_system_names())        
         
     def eventFilter(self, object, event):
         if event.type() == QtCore.QEvent.FocusIn:

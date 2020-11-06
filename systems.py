@@ -35,7 +35,7 @@ def add_system(system):
         systems.append(system)
             
 def get_system_names():
-    return [system.name for system in systems]
+    return [system.name.title() for system in systems]
         
 class Sys():
     def __init__(self,name,systemTrigger, owner = None):

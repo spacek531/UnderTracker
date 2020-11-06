@@ -14,7 +14,7 @@ SubBodyFont = QtGui.QFont("Lucida Sans",14,100)
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow,self).__init__()
-        self.setWindowTitle("[BRGD] Undermining Tool")
+        self.setWindowTitle("[BRGD] Undermining Tracker")
         self.setStyleSheet(TOP_LEVEL_CSS)
         self.VLayout = QtWidgets.QVBoxLayout()
         self.VLayout.setContentsMargins(0,0,0,0)
@@ -312,6 +312,13 @@ QLabel#OrangeText {Color: #F48D1C;}
 .QFrame {Background-Color:#001E4C;border: 6px ridge #002A6B}
 
 QLineEdit,QSpinBox,QComboBox {Color: #FF7CB7; Background-Color:#001E4C; border-color: #002A6B}
+QComboBox::drop-Down {Background-Color:#FF7CB7;border: 2px outset #FF9BC9}
+QComboBox::down-arrow {
+    Color: #FF7CB7;
+}
+QComboBox QAbstractItemView {
+Color: #FF7CB7;
+}
 
 QFrame#RedeemedMeritsBar {Background-Color: #4CAF0B; border: 4px solid #57C60D}
 QFrame#UnderminedActiveMeritsBar {Background-Color: #4AB1D3; border: 4px solid #52C3E5}
