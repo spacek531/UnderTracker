@@ -166,6 +166,8 @@ class MainWindow(QtWidgets.QMainWindow):
                      
                      ):
         
+        self.triggerInput.setValue(systemTrigger)
+        self.redeemedInput.setValue(meritsRedeemed)
         self.totalUnderminedMeritsLabel.setValue(totalUnderminedMerits)
         #self.activeUnderminedMeritsLabel.setValue(activeUnderminedMerits)
         #self.inactiveUnderminedMeritsLabel.setValue(inactiveUnderminedMerits)
@@ -189,8 +191,9 @@ class SystemSelector(QtWidgets.QComboBox):
         super(SystemSelector,self).__init__()
         self.setFont(BodyFont)
         self.setEditable(True)
-        self.installEventFilter(controller.SystemController(self,session))
-        
+        self.eventFilter = controller.SystemController(self,session)
+        self.installEventFilter(self.eventFilter)
+        self.activated.connect(self.eventFilter.activated)
 
 class NumberInput(QtWidgets.QSpinBox):
     def __init__(self):

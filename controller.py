@@ -16,8 +16,17 @@ class SystemController(QtCore.QObject):
     def activated(self,new_index):
         Sys = systems.find_system_by_number(new_index)
         if Sys:
-            session.setSystemTrigger(Sys.systemTrigger)
-            session.setSystemName(Sys.name)
-            session.setSystemOwner(Sys.owner)
+            self.session.setSystemName(Sys.name)
+            self.session.setSystemOwner(Sys.owner)
+            self.session.setSystemTrigger(Sys.systemTrigger)
+            None
         else:
-            self.session.setSystemName(self.editor.currentText)   
+            self.session.setSystemName(self.editor.currentText)
+
+class NumberInputController(QtCore.QObject):
+    def __init__(self,spinbox,callback):
+        super(NumberInputController,self).__init__()
+        self.spinbox = spinbox
+        self.callback = callback
+        
+    

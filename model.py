@@ -33,7 +33,7 @@ class Session():
     def recalculateMerits(self):
         """calculates all merit values and updates target merits of each underminer"""
         self.meritsTotal = self.meritsRedeemed + self.totalUnderminedMerits
-        self.meritsNeeded = self.systemTrigger - meritsTotal
+        self.meritsNeeded = self.systemTrigger - self.meritsTotal
         if self.meritsNeeded > 0:
             self.meritsPerUnderminer = math.ceil((self.systemTrigger - self.meritsRedeemed)/max(1,self.activeUnderminers))
             self.meritsPerUnderminerRemaining = math.ceil((self.systemTrigger - self.meritsRedeemed - self.totalUnderminedMerits)/max(1,self.activeUnderminers))
