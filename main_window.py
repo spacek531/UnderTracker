@@ -31,6 +31,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.createManagementSection()
         self.createReportingSection()
         
+        self.underminerGrid = UnderminerGrid(self.session)
+        
+        self.addLayout(self.underminerGrid)
+        
     def addWidget(self,widget):
         self.VLayout.addWidget(widget)
     
@@ -165,6 +169,22 @@ class MainWindow(QtWidgets.QMainWindow):
                      killsPerUnderminer = 0000,
                      
                      ):
+        """
+        if meritsNeeded <= 0 and systemTrigger > 0:
+            self.totalUnderminedMeritsLabel.setColor(WinnerColor)
+            self.meritsNeededLabel.setColor(WinnerColor)
+            self.meritsPerUnderminerRemainingLabel.setColor(WinnerColor)
+            self.meritsPerUnderminerLabel.setColor(WinnerColor)
+            self.killsPerUnderminerLabel.setColor(WinnerColor)
+            self.totalUnderminersLabel.setColor(WinnerColor)
+        else:
+            self.totalUnderminedMeritsLabel.setColor()
+            self.meritsNeededLabel.setColor()
+            self.meritsPerUnderminerRemainingLabel.setColor()
+            self.meritsPerUnderminerLabel.setColor()
+            self.killsPerUnderminerLabel.setColor()
+            self.totalUnderminersLabel.setColor()
+        """
         
         self.triggerInput.setValue(systemTrigger)
         self.redeemedInput.setValue(meritsRedeemed)
@@ -207,40 +227,51 @@ class ValueLabel(QtWidgets.QVBoxLayout):
         
         self.setContentsMargins(5,0,0,5)
         
-        TextLabel = QtWidgets.QLabel()
-        TextLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
-        TextLabel.setText(description)
-        TextLabel.setFont(SubtitleFont)
+        self.textLabel = QtWidgets.QLabel()
+        self.textLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
+        self.textLabel.setText(description)
+        self.textLabel.setFont(SubtitleFont)
         
         self.dataLabel = QtWidgets.QLabel()
         self.dataLabel.setAlignment(Qt.AlignHCenter | Qt.AlignBottom)
         self.dataLabel.setFont(BodyFont)
 
         if identifier:
-            TextLabel.setObjectName(identifier)
+            self.textLabel.setObjectName(identifier)
             self.dataLabel.setObjectName(identifier)
         
-        self.addWidget(TextLabel)
+        self.addWidget(self.textLabel)
         self.addWidget(self.dataLabel)
     
     def setValue(self,value):
         self.dataLabel.setText(str(value))
         
+    def setColor(self,colorString = None):
+        if colorString:
+            self.dataLabel.setStyleSheet("QLabel {{ color: \#{0}}}".format(colorString))
+            self.textLabel.setStyleSheet("QLabel {{ color: \#{0}}}".format(colorString))
+        else:
+            self.dataLabel.setStyleSheet("")
+            self.textLabel.setStyleSheet("")
+        
 class ProgressBar(QtWidgets.QVBoxLayout):
+    WinnerColor = "4CAF0B"
+    
     def __init__(self):
         super(ProgressBar,self).__init__()
         
         self.setContentsMargins(15,0,15,0)
-        
         
         Row1 = QtWidgets.QHBoxLayout()
         Row1.setContentsMargins(0,0,0,0)
         
         self.completionLabel = QtWidgets.QLabel()
         self.completionLabel.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
+        self.completionLabel.setFont(TitleFont)
 
         self.progressLabel = QtWidgets.QLabel()
         self.progressLabel.setAlignment(Qt.AlignRight | Qt.AlignBottom)
+        self.progressLabel.setFont(TitleFont)
         
         Row1.addWidget(self.completionLabel)
         Row1.addWidget(self.progressLabel)
@@ -248,6 +279,9 @@ class ProgressBar(QtWidgets.QVBoxLayout):
         
         self.frame = QtWidgets.QFrame()
         self.frame.setObjectName("ProgressBarBackground")
+        
+        BarFrameLayout = QtWidgets.QHBoxLayout()
+        BarFrameLayout.setContentsMargins(0,0,0,0)
         
         BarLayout = QtWidgets.QHBoxLayout()
         BarLayout.setContentsMargins(0,0,0,0)
@@ -262,7 +296,13 @@ class ProgressBar(QtWidgets.QVBoxLayout):
         self.underminedInactiveBar = QtWidgets.QFrame()
         self.underminedInactiveBar.setObjectName("UnderminedInactiveMeritsBar")
         
-        self.frame.setLayout(BarLayout)
+        
+        BarHolder = QtWidgets.QWidget()
+        BarFrameLayout.addWidget(BarHolder)
+        
+        BarHolder.setLayout(BarLayout)
+        
+        self.frame.setLayout(BarFrameLayout)
         
         BarLayout.addWidget(self.redeemedBar)
         BarLayout.addWidget(self.underminedInactiveBar)
@@ -281,10 +321,15 @@ class ProgressBar(QtWidgets.QVBoxLayout):
         self.addLayout(Row2)
         
     def setProgress(self,systemTrigger,meritsTotal,meritsRedeemed,activeUnderminedMerits,inactiveUnderminedMerits):
-        if systemTrigger > meritsTotal:
-            self.completionLabel.setText("Completion: {0}%".format(int(meritsTotal/systemTrigger*100)))
-        else:
+        
+        if meritsTotal >= systemTrigger:
             self.completionLabel.setText("Completion: DUNKED!")
+            self.completionLabel.setStyleSheet("QLabel {{ color: #{0}}}".format(ProgressBar.WinnerColor))
+            self.progressLabel.setStyleSheet("QLabel {{ color: #{0}}}".format(ProgressBar.WinnerColor))
+        else:
+            self.completionLabel.setText("Completion: {0}%".format(int(meritsTotal/systemTrigger*100)))
+            self.completionLabel.setStyleSheet("")
+            self.progressLabel.setStyleSheet("")
         self.progressLabel.setText("{0}/{1} merits".format(meritsTotal,systemTrigger))
             
         if systemTrigger > 0:
@@ -301,6 +346,8 @@ class ProgressBar(QtWidgets.QVBoxLayout):
             self.redeemedBar.setFixedWidth(0)
             self.underminedActiveBar.setFixedWidth(0)
             self.underminedInactiveBar.setFixedWidth(0)
+            self.completionLabel.setStyleSheet("")
+            self.progressLabel.setStyleSheet("")
             
 class UnderminerGrid(QtWidgets.QGridLayout):
     maxRows = 8
@@ -325,6 +372,7 @@ class UnderminerGrid(QtWidgets.QGridLayout):
         self.addWidget(UnderminerCard.buttonWidget,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard)
         self.addWidget(UnderminerCard.nameFrame,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard + 1)
         self.addWidget(UnderminerCard.meritFrame,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard + 2)
+        self.addWidget(UnderminerCard.target,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard + 3)
         
         self.currentRow += 1
         if self.currentRow == UnderminerGrid.maxRows:
@@ -334,7 +382,14 @@ class UnderminerGrid(QtWidgets.QGridLayout):
         return UnderminerCard
             
 class UnderminerCards():
-    def __init__(self):
+    
+    ActiveStyle = """QPushButton {Color: #FFFFFF; Background-Color: #4CAF0B; border: 2px outset #57C60D}"""
+    InactiveStyle = """QPushButton {BColor: #FFFFFF; Background-Color: #E50091; border: 2px outset #FF9BC9}"""
+    DumpStyle = ActiveStyle
+    
+    def __init__(self,miner):
+        self.miner = miner
+        
         self.buttonWidget = QtWidgets.QWidget()
         ButtonLayout = QtWidgets.QHBoxLayout()
         ButtonLayout.setContentsMargins(0,0,0,0)
@@ -342,17 +397,25 @@ class UnderminerCards():
         
         self.activeButton = QtWidgets.QPushButton()
         self.activeButton.setObjectName("MinerActiveButton")
-        self.activeButton.setText("+")
+        self.activeButton.setText()
+        self.activeButton.setFont("SubtitleFont")
         
         self.dumpButton = QtWidgets.QPushButton()
         self.dumpButton.setObjectName("MinerDumpButton")
-        self.dumpButton.setText("^")
+        self.dumpButton.setText("Dump")
+        self.dumpButton.setStyleSheet(UnderminerCards.DumpStyle)
+        self.dumpButton.setFont("SubtitleFont")
         
         ButtonLayout.addWidget(self.activeButton)
         ButtonLayout.addWidget(self.dumpButton)
         
         self.usernameInput = QtWidgets.QComboBox()
+        self.usernameInput.setFont("SubBodyFont")
         self.meritInput = QtWidgets.QSpinBox()
+        self.meritInput.setFont("SubBodyFont")
+        
+        controller.UsernameController(self.usernameInput,miner)
+        controller.NumberController(self.NumberController,miner.setMerits)
         
         self.nameFrame = createInputOutline(self.usernameInput)
         self.meritFrame = createInputOutline(self.meritInput)
@@ -377,7 +440,23 @@ class UnderminerCards():
         if target < 0:
             self.target.setText("")
         else:
-            self.target.setText("/{0}".format(target))
+            self.target.setText("of {0}".format(target))
+            
+    def setUsername(self,username):
+        self.nameFrame.setText(username)
+    
+    def setMerits(self,merits):
+        self.meritFrame.setValue(merits)
+    
+    def setActive(self):
+        self.activeButton.setText("Active")
+        self.activeButton.setStyleSheet(UnderminerCards.ActiveStyle)
+    
+    def setInactive(self):
+        self.activeButton.setText("Inactive")
+        self.activeButton.setStyleSheet(UnderminerCards.InactiveStyle)
+            
+    
 
 TOP_LEVEL_CSS ="""
 QMainWindow {Background-Color:#071519; padding: 0px}
@@ -393,7 +472,7 @@ QLabel#OrangeText {Color: #F48D1C;}
 QLineEdit,QSpinBox,QComboBox {Color: #FF7CB7; Background-Color:#001E4C; border-color: #002A6B}
 QComboBox::drop-Down {Background-Color:#FF7CB7;border: 2px outset #FF9BC9}
 QComboBox::down-arrow {
-    Color: #FF7CB7;
+    Color: #001E4C;
 }
 QComboBox QAbstractItemView {
 Color: #FF7CB7;

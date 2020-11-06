@@ -35,7 +35,8 @@ class NumberController(QtCore.QObject):
         self.callback = callback
         
         self.spinBox.editingFinished.connect(self.editingFinished)
-        self.spinBox.installEventFilter(self)     
+        self.spinBox.valueChanged.connect(self.editingFinished)
+        self.spinBox.installEventFilter(self)
         
     def editingFinished(self):
         self.callback(self.spinBox.value())
@@ -46,10 +47,10 @@ class NumberController(QtCore.QObject):
         return False
 
 class UsernameController(QtCore.QObject):
-    def __init__(self,comboBox,underminer):
+    def __init__(self,comboBox,miner):
         super(UsernameController,self).__init__()
         self.comboBox = comboBox
-        self.underminer = underminer
+        self.miner = miner
         self.comboBox.addItems(users.get_user_names()) 
         self.comboBox.activated.connect(self.activated) 
         self.comboBox.installEventFilter(self)
@@ -64,13 +65,17 @@ class UsernameController(QtCore.QObject):
     def activated(self,new_index):
         User = users.find_user_by_number(index)
         if User:
-            self.underminer.setSystemName(Sys.name)
-            self.underminer.setSystemOwner(Sys.owner)
-            self.underminer.setUsername(Sys.systemTrigger)
+            self.miner.setAssociatedUser(User)
+            self.miner.setUsername(User.truename)
             None
         else:
-            self.underminer.setUsername(self.editor.currentText)
+            self.miner.setUsername(self.editor.currentText)
 
+class PushbuttonController(QtCore.QObject):
+    def __init__(self,button,callback):
+        super(PushbuttonController,self).__init__()
+        self.button = button
+        self.callback = callback
 """
 class NumberField(QtWidgets.QVBoxLayout):
     def __init__(self,description,default_value = 0):

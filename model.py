@@ -148,7 +148,8 @@ class Underminer():
         self.targetMerits = 0
         self.associatedUser = None
         
-        self.setActive()
+    def setCard(self,card):
+        self.card = card
         
     def setMerits(self,merits):
         """sets the merits of the underminer"""
@@ -171,16 +172,20 @@ class Underminer():
     def setTargetMerits(self,target):
         """sets the underminer's target merits"""
         self.targetMerits = target
+        if self.isActive:
+            card.setTargetMerits(self.targetMerits)
         
     def setInactive(self):
         """sets the underminer to inactive, so they are not considered for needed merits"""
         self.isActive = False
         self.session.updateActiveUnderminers()
+        card.setTargetMerits(-1)
         
     def setActive(self):
         """sets the underminer to active to include them for needed merits"""
         self.isActive = True
         self.session.updateActiveUnderminers()
+        # the target merits will get set when the session recalculates everything
         
     def toggleActive(self):
         if self.isActive:
