@@ -42,9 +42,9 @@ class MainWindow(QtWidgets.QMainWindow):
         
     def createHeader(self):
         ImageLabel = QtWidgets.QLabel()
-        pixmap = QtGui.QPixmap(":/resources/header.png")
+        pixmap = QtGui.QPixmap(":/resources/STARLIGHT_BRIGADE_UM.png")
         ImageLabel.setPixmap(pixmap)
-        ImageLabel.setMinimumSize(640,100)
+        ImageLabel.setMinimumSize(650,100)
         
         HorizontalBar = QtWidgets.QFrame()
         HorizontalBar.setFrameShape(QtWidgets.QFrame.HLine)
@@ -60,18 +60,19 @@ class MainWindow(QtWidgets.QMainWindow):
         Row1 = QtWidgets.QHBoxLayout()
         Row2 = QtWidgets.QHBoxLayout()
         
-        Row1.setContentsMargins(15,5,25,5)
-        Row2.setContentsMargins(15,5,15,10)
+        Row1.setContentsMargins(15,5,15,0)
+        Row2.setContentsMargins(15,0,15,10)
         
         self.systemSelector = SystemSelector()
         
         Row1.addLayout(self.createInputBoxFrame(self.systemSelector,"System"))
-        Row1.addSpacing(15)
+        Row1.addSpacing(30)
         
         self.powerLogo = QtWidgets.QLabel()
         self.powerLogo.setMinimumSize(200,100)
         
         Row1.addWidget(self.powerLogo)
+        Row1.addSpacing(15)
         
         self.triggerInput = NumberInput()
         self.redeemedInput = NumberInput()
@@ -301,13 +302,13 @@ QMainWindow {Background-Color:#071519; padding: 0px}
 QWidget { padding: 0px; border: 0px; Background-Color: rgba(0,0,0,0) }
 
 QLabel {Color: #58CFFA;}
-QLabel#PinkText {Color: #FF56B3;}
+QLabel#PinkText {Color: #E50091;}
 QLabel#GreenText {Color: #4CAF0B;}
 QLabel#OrangeText {Color: #F48D1C;}
 
-.QFrame {Background-Color:#3B2049;border: 6px ridge #4D2973}
+.QFrame {Background-Color:#001E4C;border: 6px ridge #002A6B}
 
-QLineEdit,QSpinBox {Color: #58CFFA; Background-Color:#3B2049}
+QLineEdit,QSpinBox,QMultiBox {Color: #FF7CB7; Background-Color:#001E4C}
 
 QFrame#RedeemedMeritsBar {Background-Color: #4CAF0B; border: 4px solid #57C60D}
 QFrame#UnderminedActiveMeritsBar {Background-Color: #4AB1D3; border: 4px solid #52C3E5}
@@ -317,9 +318,3 @@ QFrame#RedeemedMeritsBar, QFrame#UnderminedActiveMeritsBar,QFrame#UnderminedInac
 QFrame#ProgressBarBackground {Background-Color:#5B5B60;min-height:30px;border: 8px ridge #6F6F77}
 
 """
-PROGRESS_BAR_COLORS = [
-    "#4CAF0B",
-    "#4AB1D3",
-    "#F48D1C"
-]
-        
