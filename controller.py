@@ -6,7 +6,8 @@ class SystemController(QtCore.QObject):
         super(SystemController,self).__init__()
         self.comboBox = comboBox
         self.session = session
-        self.comboBox.addItems(systems.get_system_names())        
+        self.comboBox.addItems(systems.get_system_names()) 
+        self.comboBox.activated.connect(self.activated)       
         
     def eventFilter(self, object, event):
         if event.type() == QtCore.QEvent.FocusIn:
@@ -23,10 +24,19 @@ class SystemController(QtCore.QObject):
         else:
             self.session.setSystemName(self.editor.currentText)
 
-class NumberInputController(QtCore.QObject):
-    def __init__(self,spinbox,callback):
-        super(NumberInputController,self).__init__()
-        self.spinbox = spinbox
+class NumberController(QtCore.QObject):
+    def __init__(self,spinBox,callback):
+        super(NumberController,self).__init__()
+        self.spinBox = spinBox
         self.callback = callback
         
-    
+        #self.spinBox.textChanged.connect(self.textChanged)
+        self.spinBox.editingFinished.connect(self.editingFinished)
+        
+    def textChanged(self,input_text):
+        try:
+            self.value = int(str(input_text))
+        except:
+            self.value = 0
+    def editingFinished(self):
+        self.callback(self.value)

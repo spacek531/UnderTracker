@@ -74,8 +74,8 @@ class MainWindow(QtWidgets.QMainWindow):
         Row1.addWidget(self.powerLogo)
         Row1.addSpacing(15)
         
-        self.triggerInput = NumberInput()
-        self.redeemedInput = NumberInput()
+        self.triggerInput = NumberInput(self.session.setSystemTrigger)
+        self.redeemedInput = NumberInput(self.session.setMeritsRedeemed)
         
         Row2.addLayout(self.createInputBoxFrame(self.triggerInput,"Merit Trigger"))
         Row2.addSpacing(15)
@@ -191,16 +191,16 @@ class SystemSelector(QtWidgets.QComboBox):
         super(SystemSelector,self).__init__()
         self.setFont(BodyFont)
         self.setEditable(True)
-        self.eventFilter = controller.SystemController(self,session)
-        self.installEventFilter(self.eventFilter)
-        self.activated.connect(self.eventFilter.activated)
+        self.controller = controller.SystemController(self,session)
+        self.installEventFilter(self.controller)
 
 class NumberInput(QtWidgets.QSpinBox):
-    def __init__(self):
+    def __init__(self,callback):
         super(NumberInput,self).__init__()
         self.setFont(BodyFont)
         self.setMinimum(0)
-        self.setMaximum(100000)
+        self.setMaximum(999999)
+        self.controller = controller.NumberController(self,callback)
 
 class ValueLabel(QtWidgets.QVBoxLayout):
     def __init__(self,description,identifier = None):
