@@ -1,6 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-    <file>resources/audiowide-regular.ttf</file>
-	<file>resources/SourceSansPro-SemiBold.ttf.</file>
+    <file>resources/header.png</file>
 </qresource>
 </RCC>

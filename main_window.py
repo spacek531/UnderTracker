@@ -2,14 +2,14 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import Qt
 
 import resources
+import model
 
-QtGui.QFontDatabase.addApplicationFont(":/audiowide-regular.ttf")
-QtGui.QFontDatabase.addApplicationFont(":/resources/SourceSansPro-SemiBold.ttf")
+#QtGui.QFontDatabase.addApplicationFont(":/resources/Audiowide_Regular.ttf")
 
-TitleFont = QtGui.QFont("Audiowide",12,100)
-SubtitleFont = QtGui.QFont("Audiowide",11,100)
-BodyFont = QtGui.QFont("SourceSansPro",14,100)
-SubBodyFont = QtGui.QFont("SourceSansPro",12,100)
+TitleFont = QtGui.QFont("Consolas",16,100)
+SubtitleFont = QtGui.QFont("Consolas",14,100)
+BodyFont = QtGui.QFont("Lucida Sans",16,100)
+SubBodyFont = QtGui.QFont("Lucida Sans",14,100)
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -18,6 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setStyleSheet(TOP_LEVEL_CSS)
         self.VLayout = QtWidgets.QVBoxLayout()
         self.VLayout.setContentsMargins(0,0,0,0)
+        self.VLayout.setSpacing(0)
         CentralWidget = QtWidgets.QWidget()
         CentralWidget.setLayout(self.VLayout)
         CentralWidget.setObjectName("CentralWidget")
@@ -27,6 +28,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.createHeader()
         self.createManagementSection()
         self.createReportingSection()
+        
+        self.session = model.Session(self)
         
     def addWidget(self,widget):
         self.VLayout.addWidget(widget)
@@ -39,10 +42,18 @@ class MainWindow(QtWidgets.QMainWindow):
         
     def createHeader(self):
         ImageLabel = QtWidgets.QLabel()
-        ImageLabel.setObjectName("HeaderImage")
-        ImageLabel.setMinimumSize(0,0)
+        pixmap = QtGui.QPixmap(":/resources/header.png")
+        ImageLabel.setPixmap(pixmap)
+        ImageLabel.setMinimumSize(640,100)
+        
+        HorizontalBar = QtWidgets.QFrame()
+        HorizontalBar.setFrameShape(QtWidgets.QFrame.HLine)
+        HorizontalBar.setFrameShadow(QtWidgets.QFrame.Raised)
+        HorizontalBar.setLineWidth(7)
         
         self.addWidget(ImageLabel)
+        
+        self.addWidget(HorizontalBar)
         
     def createManagementSection(self):
         
@@ -58,7 +69,7 @@ class MainWindow(QtWidgets.QMainWindow):
         Row1.addSpacing(15)
         
         self.powerLogo = QtWidgets.QLabel()
-        self.powerLogo.setMinimumSize(100,100)
+        self.powerLogo.setMinimumSize(200,100)
         
         Row1.addWidget(self.powerLogo)
         
@@ -83,13 +94,13 @@ class MainWindow(QtWidgets.QMainWindow):
         Row1.setContentsMargins(15,5,15,0)
         
         self.totalUnderminedMeritsLabel = ValueLabel("Total Earned\nMerits")
-        self.activeUnderminedMeritsLabel = ValueLabel("Active\nMerits")
-        self.inactiveUnderminedMeritsLabel = ValueLabel("Inactive\nMerits")
+        self.totalUnderminersLabel = ValueLabel("Total\nCommanders")
+        #self.inactiveUnderminedMeritsLabel = ValueLabel("Inactive\nMerits")
         self.meritsNeededLabel = ValueLabel("Remaining\nMerits","OrangeText")
         
         Row1.addLayout(self.totalUnderminedMeritsLabel)
-        Row1.addLayout(self.activeUnderminedMeritsLabel)
-        Row1.addLayout(self.inactiveUnderminedMeritsLabel)
+        Row1.addLayout(self.totalUnderminersLabel)
+        #Row1.addLayout(self.inactiveUnderminedMeritsLabel)
         Row1.addLayout(self.meritsNeededLabel)
         
         Row2 = QtWidgets.QHBoxLayout()
@@ -108,6 +119,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.addLayout(Row2)
         
         self.updateMerits()
+        self.updateUnderminers()
         
     def createInputBoxFrame(self,contentWidget,description,identifier = None):
         L1 = QtWidgets.QVBoxLayout()
@@ -154,8 +166,8 @@ class MainWindow(QtWidgets.QMainWindow):
                      ):
         
         self.totalUnderminedMeritsLabel.setValue(totalUnderminedMerits)
-        self.activeUnderminedMeritsLabel.setValue(activeUnderminedMerits)
-        self.inactiveUnderminedMeritsLabel.setValue(inactiveUnderminedMerits)
+        #self.activeUnderminedMeritsLabel.setValue(activeUnderminedMerits)
+        #self.inactiveUnderminedMeritsLabel.setValue(inactiveUnderminedMerits)
         
         self.meritsNeededLabel.setValue(meritsNeeded)
         self.meritsPerUnderminerRemainingLabel.setValue(meritsPerUnderminerRemaining)
@@ -163,6 +175,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.killsPerUnderminerLabel.setValue(killsPerUnderminer)
         
         self.progressBar.setProgress(systemTrigger,meritsTotal,meritsRedeemed,activeUnderminedMerits,inactiveUnderminedMerits)
+    
+    def updateUnderminers(self,
+                          activeUnderminers = 0,
+                          totalUnderminers = 0,
+                          underminers = []
+                          ):
+        self.totalUnderminersLabel.setValue(totalUnderminers)
 
 class SystemSelector(QtWidgets.QLineEdit):
     def __init__(self):

@@ -5,7 +5,9 @@ import math, pyperclip
 MERITS_PER_KILL = 30
 
 class Session():
-    def __init__():
+    def __init__(self,mainWindow):
+        self.mainWindow = mainWindow
+        
         self.systemName = ""
         self.systemTrigger = 0
         self.meritsTotal = 0
@@ -22,7 +24,9 @@ class Session():
         self.killsPerUnderminer = 0
         
         self.activeUnderminers = 0
+        self.totalUnderminers = 0
         
+        self.umid = 0
         self.underminers = []
         
     def recalculateMerits(self):
@@ -40,6 +44,8 @@ class Session():
         
         for miner in self.underminers:
             miner.setTargetMerits(miner.underminedMerits + self.meritsPerUnderminerRemaining)
+            
+        self.mainWindow.updateMerits(self.systemTrigger,self.meritsTotal,self.meritsRedeemed,self.activeUnderminedMerits,self.inactiveUnderminedMerits,self.totalUnderminedMerits,self.meritsNeeded,self.meritsPerUnderminer,self.meritsPerUnderminerRemaining,self.killsPerUnderminer)
             
     def setSystemTrigger(self,newTrigger):
         """sets the system trigger"""
@@ -68,6 +74,7 @@ class Session():
     
     def updateActiveUnderminers(self):
         """Recalculates things based on how many active underminers"""
+        self.totalUnderminers = len(self.underminers)
         self.activeUnderminers = 0
         self.activeUnderminedMerits = 0
         self.inactiveUnderminedMerits = 0
@@ -78,6 +85,7 @@ class Session():
             else:
                 self.inactiveUnderminedMerits += miner.underminedMerits
         self.recalculateMerits()
+        self.mainWindow.updateUnderminers(self.activeUnderminers,self.totalUnderminers,self.underminers)
         
     def createDiscordPaste(self):
         """creates a string for pasting into discord to show system completion"""
@@ -98,7 +106,8 @@ class Session():
         pyperclip.copy(pasteString)
         
     def createUnderminer(self):
-        self.underminers.append(Underminer(self))
+        self.underminers.append(Underminer(self,self.umid))
+        self.umid+=1
         
     def removeUnderminer(self,underminer):
         try:
@@ -119,7 +128,8 @@ class Session():
         self.recalculateMerits()
     
 class Underminer():
-    def __init__(self,session):
+    def __init__(self,session,umid):
+        self.umid = umid
         self.session = session
         self.underminerName = ""
         self.isActive = False
