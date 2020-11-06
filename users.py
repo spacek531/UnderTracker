@@ -50,5 +50,5 @@ def find_user_by_number(number):
     return KNOWN_USERS[number]
 
 def get_user_names():
-    return [user.trueName for user in KNOWN_USERS]
+    return [user.truename for user in KNOWN_USERS]
 

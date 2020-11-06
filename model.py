@@ -43,7 +43,10 @@ class Session():
             self.killsPerUnderminer = 0
         
         for miner in self.underminers:
-            miner.setTargetMerits(miner.underminedMerits + self.meritsPerUnderminerRemaining)
+            if self.meritsNeeded > 0:
+                miner.setTargetMerits(self.meritsPerUnderminerRemaining)
+            else:
+                miner.setTargetBlank()
             
         self.mainWindow.updateMerits(self.systemTrigger,self.meritsTotal,self.meritsRedeemed,self.activeUnderminedMerits,self.inactiveUnderminedMerits,self.totalUnderminedMerits,self.meritsNeeded,self.meritsPerUnderminer,self.meritsPerUnderminerRemaining,self.killsPerUnderminer)
             
@@ -70,9 +73,11 @@ class Session():
             
     def updateUnderminerMerits(self):
         """Recalculates merits when an underminer's merits changes"""
+        self.totalUnderminedMerits = 0
         self.activeUnderminedMerits = 0
         self.inactiveUnderminedMerits = 0
         for miner in self.underminers:
+            self.totalUnderminedMerits += miner.underminedMerits
             if miner.isActive:
                 self.activeUnderminedMerits += miner.underminedMerits
             else:
@@ -81,12 +86,13 @@ class Session():
     
     def updateActiveUnderminers(self):
         """Recalculates things based on how many active underminers"""
-        self.totalUnderminers = len(self.underminers)
+        self.totalUnderminers = 0
         self.activeUnderminers = 0
         self.activeUnderminedMerits = 0
         self.inactiveUnderminedMerits = 0
         for miner in self.underminers:
             self.activeUnderminers += miner.isActive
+            self.totalUnderminers += miner.exists
             if miner.isActive:
                 self.activeUnderminedMerits += miner.underminedMerits
             else:
@@ -103,7 +109,7 @@ class Session():
         Components = ["""__**{0}:**__""".format(self.systemName.upper())]
         for i in range(len(self.underminers)):
             miner = self.underminers[i]
-            if miner.isActive or len(miner.underminerName) > 0:
+            if miner.exists:
                 Components.append("@{0}: +{1}".format(miner.associatedUser and miner.associatedUser.discordHandle or miner.underminerName, miner.underminedMerits))
         
         Components.append("""**Total: +{0}** {1}/{2}""".format(self.totalUnderminedMerits, self.meritsTotal, self.systemTrigger))
@@ -117,18 +123,11 @@ class Session():
         pyperclip.copy(pasteString)
         
     def createUnderminer(self):
+        Miner = Underminer(self)
+        Card = self.mainWindow.createUnderminer(Miner)
+        Miner.setCard(Card)
+        self.underminers.append(Miner)
         
-        miner = Underminer(self)
-        self.underminers.append(miner)
-        
-    def removeUnderminer(self,underminer):
-        try:
-            self.underminers.remove(self.underminers.index(underminer))
-            self.updateActiveUnderminers()
-        except:
-            #cry about it I guess
-            None
-            
     def dumpUnderminerMerits(self,merits,active):
         """transfers the specified merits from undermined merits to redeemed merits"""
         self.meritsRedeemed += merits
@@ -142,57 +141,73 @@ class Session():
 class Underminer():
     def __init__(self,session):
         self.session = session
-        self.underminerName = ""
+        self.username = ""
         self.isActive = False
+        self.exists = False
+        self.firstTimeActivation = False
         self.underminedMerits = 0
         self.targetMerits = 0
         self.associatedUser = None
         
     def setCard(self,card):
         self.card = card
+        self.setInactive()
+        
+    def determineIfExists(self):
+        self.exists = len(self.username) > 0 or self.isActive or self.underminedMerits
+        self.session.updateActiveUnderminers()   
         
     def setMerits(self,merits):
         """sets the merits of the underminer"""
         self.underminedMerits = merits
         self.session.updateUnderminerMerits()
+        self.card.setMerits(self.underminedMerits)
         
     def dumpMerits(self):
         """transfers the merits to redeemed and removes them from the underminer"""
         self.session.dumpUnderminerMerits(self.underminedMerits,self.isActive)
         self.underminedMerits = 0
+        self.card.setMerits(self.underminedMerits)
+        self.determineIfExists()
         
     def setUsername(self,username):
         """sets the username of the underminer"""
-        self.underminerName = username
+        self.username = username
+        if not self.firstTimeActivation:
+            self.firstTimeActivation = True
+            self.setActive()
+        #self.card.setUsername(self.username)
         
     def setAssociatedUser(self,associatedUser):
         """sets the UserProxy of the underminer for discord integration"""
         self.associatedUser = associatedUser
         
+    def setTargetBlank(self):
+        self.card.setTargetMerits(-1)
+        
     def setTargetMerits(self,target):
         """sets the underminer's target merits"""
-        self.targetMerits = target
+        self.targetMerits = self.underminedMerits + target
         if self.isActive:
-            card.setTargetMerits(self.targetMerits)
+            self.card.setTargetMerits(self.targetMerits)
         
     def setInactive(self):
         """sets the underminer to inactive, so they are not considered for needed merits"""
         self.isActive = False
-        self.session.updateActiveUnderminers()
-        card.setTargetMerits(-1)
+        self.determineIfExists()
+        self.card.setInactive()
+        self.setTargetBlank()
         
     def setActive(self):
         """sets the underminer to active to include them for needed merits"""
         self.isActive = True
-        self.session.updateActiveUnderminers()
+        self.determineIfExists()
+        self.card.setActive()
         # the target merits will get set when the session recalculates everything
         
     def toggleActive(self):
+        self.firstTimeActivation = True
         if self.isActive:
             self.setInactive()
         else:
             self.setActive()
-            
-    def remove(self):
-        """deletes the underminer and gets rid of their merits"""
-        self.session.removeUnderminer(self)

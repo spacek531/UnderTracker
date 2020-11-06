@@ -10,7 +10,7 @@ class SystemController(QtCore.QObject):
         self.comboBox.activated.connect(self.activated) 
         self.comboBox.installEventFilter(self)
         
-        self.comboBox.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox.setInsertPolicy(QtWidgets.QComboBox.InsertAtBottom)
         
     def eventFilter(self, object, event):
         if event.type() == QtCore.QEvent.FocusIn:
@@ -25,8 +25,34 @@ class SystemController(QtCore.QObject):
             self.session.setSystemTrigger(Sys.systemTrigger)
             None
         else:
-            self.session.setSystemName(self.editor.currentText)
+            self.session.setSystemName(self.comboBox.currentText())
             self.session.setSystemOwner(0)
+            
+class UsernameController(QtCore.QObject):
+    def __init__(self,comboBox,miner):
+        super(UsernameController,self).__init__()
+        self.comboBox = comboBox
+        self.miner = miner
+        self.comboBox.addItems(users.get_user_names()) 
+        self.comboBox.activated.connect(self.activated) 
+        self.comboBox.installEventFilter(self)
+        
+        self.comboBox.setInsertPolicy(QtWidgets.QComboBox.InsertAtBottom)
+        self.comboBox.clearEditText()
+        
+    def eventFilter(self, object, event):
+        if event.type() == QtCore.QEvent.FocusIn:
+            self.comboBox.clearEditText()
+        return False
+        
+    def activated(self,new_index):
+        User = users.find_user_by_number(new_index)
+        if User:
+            self.miner.setAssociatedUser(User)
+            self.miner.setUsername(User.truename)
+            None
+        else:
+            self.miner.setUsername(self.comboBox.currentText())
 
 class NumberController(QtCore.QObject):
     def __init__(self,spinBox,callback):
@@ -46,36 +72,23 @@ class NumberController(QtCore.QObject):
             self.spinBox.selectAll()
         return False
 
-class UsernameController(QtCore.QObject):
-    def __init__(self,comboBox,miner):
-        super(UsernameController,self).__init__()
-        self.comboBox = comboBox
-        self.miner = miner
-        self.comboBox.addItems(users.get_user_names()) 
-        self.comboBox.activated.connect(self.activated) 
-        self.comboBox.installEventFilter(self)
-        
-        self.comboBox.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
-        
-    def eventFilter(self, object, event):
-        if event.type() == QtCore.QEvent.FocusIn:
-            self.comboBox.clearEditText()
-        return False
-        
-    def activated(self,new_index):
-        User = users.find_user_by_number(index)
-        if User:
-            self.miner.setAssociatedUser(User)
-            self.miner.setUsername(User.truename)
-            None
-        else:
-            self.miner.setUsername(self.editor.currentText)
-
-class PushbuttonController(QtCore.QObject):
+class PushButtonController(QtCore.QObject):
     def __init__(self,button,callback):
-        super(PushbuttonController,self).__init__()
+        super(PushButtonController,self).__init__()
         self.button = button
         self.callback = callback
+        
+        self.button.clicked.connect(self.clicked)
+        
+    def eventFilter(self,object,event):
+        if event.type() == QtCore.QEvent.MouseButtonPress:
+            if event.button() == Qt.LeftButton:
+                self.clicked()
+                
+        return False
+    
+    def clicked(self):
+        self.callback()
 """
 class NumberField(QtWidgets.QVBoxLayout):
     def __init__(self,description,default_value = 0):

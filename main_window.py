@@ -9,9 +9,39 @@ import model, controller
 TitleFont = QtGui.QFont("Consolas",16,100)
 SubtitleFont = QtGui.QFont("Consolas",14,100)
 BodyFont = QtGui.QFont("Lucida Sans",16,100)
-SubBodyFont = QtGui.QFont("Lucida Sans",14,100)
+SubBodyFont = QtGui.QFont("Lucida Sans",12,100)
+SmallFont = QtGui.QFont("Lucida Sans",10,100)
+
+NUMBER_OF_UNDERMINERS = 16
 
 class MainWindow(QtWidgets.QMainWindow):
+    def createInputBoxFrame(self,contentWidget,description,identifier = None):
+        L1 = QtWidgets.QVBoxLayout()
+        L1.setContentsMargins(0,0,0,0)
+        L1.addStretch(0)
+        
+        TextLabel = QtWidgets.QLabel()
+        TextLabel.setText(description)
+        TextLabel.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
+        
+        if identifier:
+            TextLabel.setObjectName(identifier)
+            
+        L1.addWidget(TextLabel)
+        
+        Frame = QtWidgets.QFrame()
+        Frame.setObjectName("InputFrame")
+        
+        L2 = QtWidgets.QVBoxLayout()
+        L2.setContentsMargins(0,0,0,0)
+        Frame.setLayout(L2)
+        
+        L2.addWidget(contentWidget)
+        L1.addWidget(Frame)
+        L1.addStretch(0)
+        
+        return L1    
+    
     def __init__(self):
         super(MainWindow,self).__init__()
         self.setWindowTitle("[BRGD] Undermining Tracker")
@@ -25,15 +55,15 @@ class MainWindow(QtWidgets.QMainWindow):
         CentralWidget.setFont(TitleFont)
         self.setCentralWidget(CentralWidget)
 
-        self.session = model.Session(self)        
+        self.session = model.Session(self)  
         
         self.createHeader()
         self.createManagementSection()
         self.createReportingSection()
+        self.createUnderminerGrid()
         
-        self.underminerGrid = UnderminerGrid(self.session)
-        
-        self.addLayout(self.underminerGrid)
+        for _ in range(NUMBER_OF_UNDERMINERS):
+            self.session.createUnderminer()
         
     def addWidget(self,widget):
         self.VLayout.addWidget(widget)
@@ -126,32 +156,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.updateMerits()
         self.updateUnderminers()
         
-    def createInputBoxFrame(self,contentWidget,description,identifier = None):
-        L1 = QtWidgets.QVBoxLayout()
-        L1.setContentsMargins(0,0,0,0)
-        L1.addStretch(0)
-        
-        TextLabel = QtWidgets.QLabel()
-        TextLabel.setText(description)
-        TextLabel.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
-        
-        if identifier:
-            TextLabel.setObjectName(identifier)
-            
-        L1.addWidget(TextLabel)
-        
-        Frame = QtWidgets.QFrame()
-        Frame.setObjectName("InputFrame")
-        
-        L2 = QtWidgets.QVBoxLayout()
-        L2.setContentsMargins(0,0,0,0)
-        Frame.setLayout(L2)
-        
-        L2.addWidget(contentWidget)
-        L1.addWidget(Frame)
-        L1.addStretch(0)
-        
-        return L1
+    def createUnderminerGrid(self):
+        self.underminerGrid = UnderminerGrid()
+        self.addLayout(self.underminerGrid)
+    
+    def createUnderminer(self,miner):
+        card = UnderminerCard(miner)
+        self.underminerGrid.addUnderminer(card)
+        return card
     
     ## now for the updater functions ##
     
@@ -184,8 +196,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.meritsPerUnderminerLabel.setColor()
             self.killsPerUnderminerLabel.setColor()
             self.totalUnderminersLabel.setColor()
-        """
-        
+        """  
         self.triggerInput.setValue(systemTrigger)
         self.redeemedInput.setValue(meritsRedeemed)
         self.totalUnderminedMeritsLabel.setValue(totalUnderminedMerits)
@@ -212,6 +223,14 @@ class SystemSelector(QtWidgets.QComboBox):
         self.setFont(BodyFont)
         self.setEditable(True)
         self.controller = controller.SystemController(self,session)
+        
+
+class UsernameSelector(QtWidgets.QComboBox):
+    def __init__(self,miner):
+        super(UsernameSelector,self).__init__()
+        self.setFont(BodyFont)
+        self.setEditable(True)
+        self.controller = controller.UsernameController(self,miner)        
 
 class NumberInput(QtWidgets.QSpinBox):
     def __init__(self,callback):
@@ -219,7 +238,13 @@ class NumberInput(QtWidgets.QSpinBox):
         self.setFont(BodyFont)
         self.setMinimum(0)
         self.setMaximum(999999)
+        self.setSingleStep(30)
         self.controller = controller.NumberController(self,callback)
+
+class PushButton(QtWidgets.QPushButton):
+    def __init__(self,callback):
+        super(PushButton,self).__init__()
+        self.controller = controller.PushButtonController(self,callback)
 
 class ValueLabel(QtWidgets.QVBoxLayout):
     def __init__(self,description,identifier = None):
@@ -349,92 +374,103 @@ class ProgressBar(QtWidgets.QVBoxLayout):
             self.completionLabel.setStyleSheet("")
             self.progressLabel.setStyleSheet("")
             
-class UnderminerGrid(QtWidgets.QGridLayout):
+class UnderminerGrid(QtWidgets.QHBoxLayout):
     maxRows = 8
-    columnsPerCard = 5
     spacerColumnWidth = 10
-    def __init__(self,session):
+    def __init__(self):
         super(UnderminerGrid,self).__init__()
-        self.session = session
-        self.setContentsMargins(15,0,0,15)
-        self.setVerticalSpacing(2)
-        self.setHorizontalSpacing(5)
+        self.setContentsMargins(5,0,0,0)
+        self.setSpacing(2)
+        
+        self.columns = []
         
         self.currentRow = 0
-        self.currentColumn = 0
+        self.createColumn()
         
-    def createUnderminer(self):
-        if self.currentRow == 0 and self.currentColumn > 0:
-            self.setColumnMinimumWidth(self.currentColumn*UnderminerGrid.ColumnsPerCard - 1,spacerColumnWidth)
-    
-        UnderminerCard = UnderminerCards()        
+    def createColumn(self):
+        Column = QtWidgets.QVBoxLayout()
+        Column.setContentsMargins(0,0,0,0)
+        self.addLayout(Column)
+        self.columns.append(Column)
         
-        self.addWidget(UnderminerCard.buttonWidget,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard)
-        self.addWidget(UnderminerCard.nameFrame,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard + 1)
-        self.addWidget(UnderminerCard.meritFrame,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard + 2)
-        self.addWidget(UnderminerCard.target,self.currentRow,self.currentColumn*UnderminerGrid.ColumnsPerCard + 3)
+    def addUnderminer(self,card):
+        self.columns[len(self.columns)-1].addLayout(card)
         
         self.currentRow += 1
-        if self.currentRow == UnderminerGrid.maxRows:
+        if self.currentRow == self.maxRows:
             self.currentRow = 0
-            self.currentColumn += 1
+            self.createColumn()
             
-        return UnderminerCard
-            
-class UnderminerCards():
+class UnderminerCard(QtWidgets.QHBoxLayout):
     
-    ActiveStyle = """QPushButton {Color: #FFFFFF; Background-Color: #4CAF0B; border: 2px outset #57C60D}"""
-    InactiveStyle = """QPushButton {BColor: #FFFFFF; Background-Color: #E50091; border: 2px outset #FF9BC9}"""
+    ActiveStyle = """QPushButton {Color: #FFFFFF; Background-Color: #4CAF0B; border: 3px outset #57C60D}"""
+    InactiveStyle = """QPushButton {Color: #FFFFFF; Background-Color: #E50091; border: 3px outset #FF9BC9}"""
     DumpStyle = ActiveStyle
     
-    def __init__(self,miner):
-        self.miner = miner
+    ButtonSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum,QtWidgets.QSizePolicy.Preferred)
+    UsernameSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,QtWidgets.QSizePolicy.Preferred)
+    MeritsSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
         
-        self.buttonWidget = QtWidgets.QWidget()
-        ButtonLayout = QtWidgets.QHBoxLayout()
-        ButtonLayout.setContentsMargins(0,0,0,0)
-        self.buttonWidget.setLayout(ButtonLayout)
-        
-        self.activeButton = QtWidgets.QPushButton()
-        self.activeButton.setObjectName("MinerActiveButton")
-        self.activeButton.setText()
-        self.activeButton.setFont("SubtitleFont")
-        
-        self.dumpButton = QtWidgets.QPushButton()
-        self.dumpButton.setObjectName("MinerDumpButton")
-        self.dumpButton.setText("Dump")
-        self.dumpButton.setStyleSheet(UnderminerCards.DumpStyle)
-        self.dumpButton.setFont("SubtitleFont")
-        
-        ButtonLayout.addWidget(self.activeButton)
-        ButtonLayout.addWidget(self.dumpButton)
-        
-        self.usernameInput = QtWidgets.QComboBox()
-        self.usernameInput.setFont("SubBodyFont")
-        self.meritInput = QtWidgets.QSpinBox()
-        self.meritInput.setFont("SubBodyFont")
-        
-        controller.UsernameController(self.usernameInput,miner)
-        controller.NumberController(self.NumberController,miner.setMerits)
-        
-        self.nameFrame = createInputOutline(self.usernameInput)
-        self.meritFrame = createInputOutline(self.meritInput)
-        
-        self.target = QtWidgets.QLabel()
-        self.target.setObjectName("OrangeText")
-        self.target.setMinimumWidth(40)
-        
-    def createInputOutline(self,contentWidget):
+    def createInputOutline(self,contentWidget= None):
 
         Frame = QtWidgets.QFrame()
         Frame.setObjectName("InputFrame")
-        L2 = QtWidgets.QVBoxLayout()
+        L2 = QtWidgets.QHBoxLayout()
         L2.setContentsMargins(0,0,0,0)
         Frame.setLayout(L2)
-        
-        L2.addWidget(contentWidget)
+        if contentWidget:
+            L2.addWidget(contentWidget)
         
         return Frame
+    
+    def __init__(self,miner):
+        super(UnderminerCard,self).__init__()
+        self.miner = miner
+        self.setContentsMargins(0,0,0,0)
+        self.setSpacing(0)
+        
+        ButtonLayout = QtWidgets.QHBoxLayout()
+        ButtonLayout.setContentsMargins(0,4,4,4)
+        
+        self.activeButton = PushButton(miner.toggleActive)
+        
+        self.activeButton.setFont(SmallFont)
+        self.activeButton.setText("I")
+        self.activeButton.setStyleSheet(self.ActiveStyle)
+        self.activeButton.setMinimumWidth(18)
+        self.activeButton.setSizePolicy(self.ButtonSizePolicy)
+
+        self.dumpButton = PushButton(miner.dumpMerits)        
+        self.dumpButton.setFont(SmallFont)
+        self.dumpButton.setText("D")
+        self.dumpButton.setMinimumWidth(18)
+        self.dumpButton.setStyleSheet(self.DumpStyle)
+        self.dumpButton.setSizePolicy(self.ButtonSizePolicy)
+
+        ButtonLayout.addWidget(self.activeButton)
+        #ButtonLayout.addWidget(self.dumpButton)
+        
+        self.usernameInput = UsernameSelector(miner)
+        self.usernameInput.setFont(SubBodyFont)
+        
+        self.meritInput = NumberInput(miner.setMerits)
+        self.meritInput.setFont(SubBodyFont)
+        self.meritInput.setFixedWidth(70)
+        
+        InputFrame = self.createInputOutline(self.usernameInput)
+        InputFrame.setSizePolicy(self.UsernameSizePolicy)
+        
+        InputFrame.layout().addWidget(self.usernameInput)
+        InputFrame.layout().addWidget(self.meritInput)
+        
+        self.target = QtWidgets.QLabel()
+        self.target.setObjectName("OrangeText")
+        self.target.setFont(SmallFont)
+        self.target.setMinimumWidth(60)
+
+        self.addLayout(ButtonLayout)
+        self.addWidget(InputFrame)
+        self.addWidget(self.target)
     
     def setTargetMerits(self,target):
         if target < 0:
@@ -443,18 +479,18 @@ class UnderminerCards():
             self.target.setText("of {0}".format(target))
             
     def setUsername(self,username):
-        self.nameFrame.setText(username)
+        self.usernameInput.setText(username)
     
     def setMerits(self,merits):
-        self.meritFrame.setValue(merits)
+        self.meritInput.setValue(merits)
     
     def setActive(self):
-        self.activeButton.setText("Active")
-        self.activeButton.setStyleSheet(UnderminerCards.ActiveStyle)
+        self.activeButton.setText("I")
+        self.activeButton.setStyleSheet(UnderminerCard.ActiveStyle)
     
     def setInactive(self):
-        self.activeButton.setText("Inactive")
-        self.activeButton.setStyleSheet(UnderminerCards.InactiveStyle)
+        self.activeButton.setText("O")
+        self.activeButton.setStyleSheet(UnderminerCard.InactiveStyle)
             
     
 

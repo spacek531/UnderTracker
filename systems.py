@@ -1,6 +1,4 @@
 
-MERITS_PER_KILL = 30
-
 OWNERSHIP_CODES = [
 "NB", # nobody
 "ZH",#: 'Zachary Hudson',
