@@ -52,13 +52,21 @@ class Session():
             
         self.mainWindow.updateMerits(self.systemTrigger,self.meritsTotal,self.meritsRedeemed,self.activeUnderminedMerits,self.inactiveUnderminedMerits,self.totalUnderminedMerits,self.meritsNeeded,self.meritsPerUnderminer,self.meritsPerUnderminerRemaining,self.killsPerUnderminer)
         
+    def setPowerBonus(self,bonus):
+        if self.systemObject:
+            if self.systemObject.bonus:
+                self.systemObject.bonus.changeDefenseBonus(bonus)
+                self.setSystemTrigger(self.systemObject.getSystemTrigger())
+        
     def setSystemObject(self,systemObject):
         self.systemObject = None
         if systemObject:
             self.setSystemName(systemObject.name)
-            self.setSystemOwner(systemObject.owner)
-            self.setSystemTrigger(systemObject.systemTrigger)
+            self.setSystemOwner(systemObject.owner,systemObject.bonus and systemObject.bonus.bonus or 0)
+            self.setSystemTrigger(systemObject.getSystemTrigger())
             self.systemObject = systemObject
+        else:
+            self.setSystemOwner(0,0)
             
     def setSystemTrigger(self,newTrigger):
         """sets the system trigger"""
@@ -73,9 +81,9 @@ class Session():
         self.systemName = newName
         # send this to MainWindow?
         
-    def setSystemOwner(self,newOwnerId):
+    def setSystemOwner(self,newOwnerId,bonus):
         self.systemOwner = newOwnerId
-        self.mainWindow.setSystemOwner(newOwnerId)
+        self.mainWindow.setSystemOwner(newOwnerId,bonus)
         # send this to MainWindow
         
     def setMeritsRedeemed(self,newRedeemed):

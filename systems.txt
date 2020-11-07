@@ -1,6 +1,18 @@
 ## comma-delimited: system name, system owner, undermining trigger
 ## double-hash is comment
 
+ZT, 0
+AD, 0
+ALD, 0
+DP, 0
+ZH, 0
+FW, 10
+LYR, 0
+ACD, 0
+PA, 0
+YG, 0
+EM, 0
+
 ## Zachary Hudson
 LHS 2088, ZH, 67606
 Groombridge 1618, ZH, 75359

@@ -176,7 +176,37 @@ class MainWindow(QtWidgets.QMainWindow):
         self.powerLogo = QtWidgets.QLabel()
         self.powerLogo.setMinimumSize(200,100)
         
+        self.bonusWidget = NumberInput(self.session.setPowerBonus)
+        self.bonusWidget.setMaximum(50)
+        self.bonusWidget.setSuffix("%")
+        self.bonusWidget.setSingleStep(1)
+        self.bonusWidget.setFont(SubBodyFont)
+        
+        L1 = QtWidgets.QVBoxLayout()
+        L1.setContentsMargins(0,0,0,0)
+        L1.addStretch(0)
+        
+        TextLabel = QtWidgets.QLabel()
+        TextLabel.setText("Defense Bonus")
+        TextLabel.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
+        TextLabel.setFont(SubtitleFont)
+            
+        L1.addWidget(TextLabel)
+        
+        Frame = QtWidgets.QFrame()
+        Frame.setObjectName("InputFrame")
+        
+        L2 = QtWidgets.QVBoxLayout()
+        L2.setContentsMargins(0,0,0,0)
+        Frame.setLayout(L2)
+        
+        L2.addWidget(self.bonusWidget)
+        L1.addWidget(Frame)
+        L1.addStretch(0)
+        
+        
         Row1.addWidget(self.powerLogo)
+        Row1.addLayout(L1)
         Row1.addSpacing(0)
         
         self.triggerInput = NumberInput(self.session.setSystemTrigger)
@@ -249,10 +279,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.underminerGrid.addUnderminer(card)
         return card
     
-    ## now for the updater functions ##
+    ## now for the updater functions #
     
-    def setSystemOwner(self,ownerId):
+    def setSystemOwner(self,ownerId,bonus):
         self.powerLogo.setPixmap(self.getOwnerSprite(ownerId))
+        self.bonusWidget.setValue(bonus)
     
     def updateMerits(self,
                      systemTrigger = 0000,

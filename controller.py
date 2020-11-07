@@ -24,7 +24,6 @@ class SystemController(QtCore.QObject):
         else:
             self.session.setSystemObject(None)
             self.session.setSystemName(self.comboBox.currentText())
-            self.session.setSystemOwner(0)
             
 class UsernameController(QtCore.QObject):
     def __init__(self,comboBox,miner):
