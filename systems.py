@@ -21,7 +21,6 @@ OwnershipCodes = [
 ]
 
 defenseBonus = [None for i in range(len(OwnershipCodes))]
-    
 
 class Defense():
     def __init__(self,owner,bonus,index):
@@ -120,7 +119,7 @@ for i in range(len(syslines)):
             None
     elif len(props) == 3:
         try:
-            int(props[2])
+            float(props[2])
             Sys(*props,i)
         except:
             None

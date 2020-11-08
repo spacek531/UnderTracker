@@ -98,7 +98,7 @@ Erivit, FW, 19490
 Skardee, FW, 13171
 Uteran, FW, 16765
 Fousang, FW, 20813
-Kali, FW, 149040
+Kali, FW, 14904
 Sosong, FW, 12456
 Carnoeck, FW, 15441
 LP 906-9, FW, 16632
@@ -118,7 +118,7 @@ NLTT 19808, FW, 36272
 18 Puppis, FW, 51219
 Neche, FW, 37929
 Skeggiko O, FW, 13659
-Marahli, FW, 8000
+Marahli, FW, 15802
 LHS 1887, FW, 18366
 Momoirent, FW, 21041
 LHS 235, FW, 15010

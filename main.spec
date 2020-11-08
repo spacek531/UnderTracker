@@ -6,12 +6,7 @@ block_cipher = None
 a = Analysis(['main.py'],
              pathex=['D:\\Documents\\GitHub\\UnderTracker'],
              binaries=[],
-             datas=[
-			 ('Systems.txt','.'),
-			 ('Users.txt','.'),
-			 ('readme.md','.'),
-			 ('LICENSE','.')
-			 ],
+             datas=[],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
