@@ -6,7 +6,12 @@ block_cipher = None
 a = Analysis(['main.py'],
              pathex=['D:\\Documents\\GitHub\\UnderTracker'],
              binaries=[],
-             datas=[('D:\\Documents\\GitHub\\UnderTracker\\resources\\tracker.ico','.')],
+             datas=[
+			 ('Systems.txt','.'),
+			 ('Users.txt','.'),
+			 ('readme.md','.'),
+			 ('LICENSE','.')
+			 ],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -23,7 +28,6 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          icon='D:\\Documents\\GitHub\\UnderTracker\\resources\\tracker.ico',
           name='UnderTracker',
           debug=False,
           bootloader_ignore_signals=False,
@@ -31,4 +35,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False )
+          console=False , icon='resources\\tracker.ico')

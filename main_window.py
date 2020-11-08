@@ -23,7 +23,7 @@ class SystemSelector(QtWidgets.QComboBox):
 class UsernameSelector(QtWidgets.QComboBox):
     def __init__(self,miner):
         super(UsernameSelector,self).__init__()
-        self.setFont(BodyFont)
+        self.setFont(SubBodyFont)
         self.setEditable(True)
         self.controller = controller.UsernameController(self,miner)        
 
@@ -88,6 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
         L1.addStretch(0)
         
         TextLabel = QtWidgets.QLabel()
+        TextLabel.setFont(SubtitleFont)
         TextLabel.setText(description)
         TextLabel.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
         
@@ -150,6 +151,7 @@ class MainWindow(QtWidgets.QMainWindow):
         pixmap = QtGui.QPixmap(":/resources/STARLIGHT_BRIGADE_UM.png")
         ImageLabel.setPixmap(pixmap)
         ImageLabel.setMinimumSize(650,100)
+        ImageLabel.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         
         HorizontalBar = QtWidgets.QFrame()
         HorizontalBar.setFrameShape(QtWidgets.QFrame.HLine)
@@ -171,7 +173,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.systemSelector = SystemSelector(self.session)
         
         Row1.addLayout(self.createInputBoxFrame(self.systemSelector,"System"))
-        Row1.addSpacing(30)
+        Row1.addSpacing(15)
         
         self.powerLogo = QtWidgets.QLabel()
         self.powerLogo.setMinimumSize(200,100)
@@ -180,7 +182,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.bonusWidget.setMaximum(50)
         self.bonusWidget.setSuffix("%")
         self.bonusWidget.setSingleStep(1)
-        self.bonusWidget.setFont(SubBodyFont)
+        self.bonusWidget.setFont(BodyFont)
         
         L1 = QtWidgets.QVBoxLayout()
         L1.setContentsMargins(0,0,0,0)
@@ -205,13 +207,15 @@ class MainWindow(QtWidgets.QMainWindow):
         L1.addStretch(0)
         
         
-        Row1.addWidget(self.powerLogo)
         Row1.addLayout(L1)
+        Row1.addSpacing(0)
+        Row1.addWidget(self.powerLogo)
         Row1.addSpacing(0)
         
         self.triggerInput = NumberInput(self.session.setSystemTrigger)
         self.redeemedInput = NumberInput(self.session.setMeritsRedeemed)
-        
+        #Row2.addLayout(L1)
+        #Row2.addSpacing(15)
         Row2.addLayout(self.createInputBoxFrame(self.triggerInput,"Merit Trigger"))
         Row2.addSpacing(15)
         Row2.addLayout(self.createInputBoxFrame(self.redeemedInput,"Merits Redeemed","GreenText"))
@@ -496,22 +500,21 @@ class UnderminerCard(QtWidgets.QHBoxLayout):
         self.activeButton.setStyleSheet(self.ActiveStyle)
         self.activeButton.setMinimumWidth(18)
         self.activeButton.setSizePolicy(self.ButtonSizePolicy)
-
+        """
         self.dumpButton = PushButton(miner.dumpMerits)        
         self.dumpButton.setFont(SmallFont)
         self.dumpButton.setText("D")
         self.dumpButton.setMinimumWidth(18)
         self.dumpButton.setSizePolicy(self.ButtonSizePolicy)
-
+        """
         ButtonLayout.addWidget(self.activeButton)
         #ButtonLayout.addWidget(self.dumpButton)
         
         self.usernameInput = UsernameSelector(miner)
-        self.usernameInput.setFont(SubBodyFont)
         
         self.meritInput = NumberInput(miner.setMerits)
         self.meritInput.setFont(SubBodyFont)
-        self.meritInput.setFixedWidth(70)
+        self.meritInput.setMaximum(99999)
         
         InputFrame = self.createInputOutline(self.usernameInput)
         InputFrame.setSizePolicy(self.UsernameSizePolicy)

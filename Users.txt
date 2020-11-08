@@ -1,4 +1,4 @@
-## comma-delimited: discord username (id optional), display name
+## comma-delimited: discord username (id optional),display name
 ## double-hash is comment
 
 
@@ -9,7 +9,7 @@ jordanindenmark,Deftbridge
 UnspeakablePat,UnspeakablePat
 Rasperry,Rasperry
 hubcap,HUB-CAP
-Ner0, Nero Prizak
+Ner0,Nero Prizak
 Xenophon117,Xenophon117
 djp5,Erkat Posner
 donkipunx,Donkipunx
@@ -31,4 +31,6 @@ Mo Mo,Mo Mo
 |3lue|2aven,|3lue|2aven
 Octavius,Octavius
 Kraig,Kraig Lane
-Flebens,Mace Cartier)
+Flebens,Mace Cartier
+rabidmonkey,Napoleon Wanderlust
+MantisOlthoi,MantisOlthoi

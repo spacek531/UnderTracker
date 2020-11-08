@@ -131,7 +131,7 @@ class Session():
         for i in range(len(self.underminers)):
             miner = self.underminers[i]
             if miner.exists:
-                Components.append("@{0}: +{1}".format(miner.associatedUser and miner.associatedUser.discordHandle or miner.underminerName, miner.underminedMerits))
+                Components.append("@{0}: +{1}".format(miner.associatedUser and miner.associatedUser.discordHandle or miner.username, miner.underminedMerits))
         
         Components.append("""**Total: +{0}** {1}/{2}""".format(self.totalUnderminedMerits, self.meritsTotal, self.systemTrigger))
         if self.meritsNeeded > 0:

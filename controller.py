@@ -8,7 +8,7 @@ class SystemController(QtCore.QObject):
         self.session = session
         self.comboBox.addItems(systems.get_system_names()) 
         self.comboBox.activated.connect(self.activated) 
-        self.comboBox.installEventFilter(self)
+        #self.comboBox.installEventFilter(self)
         
         self.comboBox.setInsertPolicy(QtWidgets.QComboBox.InsertAtBottom)
         
